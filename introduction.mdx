@@ -1,0 +1,124 @@
+---
+title: Introduction
+description: Beautiful animated icons you can install like shadcn components
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.svg"
+  alt="Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.svg"
+  alt="Hero Dark"
+/>
+
+## Welcome to Anicon
+
+Anicon is a collection of **572+ animated icons** built with [Motion](https://motion.dev/) (formerly Framer Motion) that you can install just like [shadcn/ui](https://ui.shadcn.com) components. Each icon comes with smooth, delightful animations that respond to user interactions.
+
+<CardGroup cols={2}>
+  <Card
+    title="Installation"
+    icon="download"
+    href="/installation"
+  >
+    Get started by installing Anicon in your project
+  </Card>
+  <Card
+    title="Quick Start"
+    icon="bolt"
+    href="/quickstart"
+  >
+    Add your first animated icon in under a minute
+  </Card>
+  <Card
+    title="Browse Icons"
+    icon="grid"
+    href="https://anicon.dev"
+  >
+    Explore all 572+ animated icons in the gallery
+  </Card>
+  <Card
+    title="Component API"
+    icon="code"
+    href="/components/props-reference"
+  >
+    Learn about customization options and props
+  </Card>
+</CardGroup>
+
+## Why Anicon?
+
+<AccordionGroup>
+  <Accordion title="Install like shadcn components">
+    Use the familiar shadcn CLI workflow. Icons are copied directly into your project, giving you full control and ownership of the code.
+  </Accordion>
+
+  <Accordion title="Built with Motion">
+    Powered by Motion (Framer Motion), the industry-standard animation library for React. Get smooth, performant animations out of the box.
+  </Accordion>
+
+  <Accordion title="Accessibility first">
+    Icons respect `prefers-reduced-motion` settings automatically, ensuring a great experience for all users.
+  </Accordion>
+
+  <Accordion title="Fully customizable">
+    Since icons are copied to your project, you can customize colors, sizes, animations, and behaviors however you like.
+  </Accordion>
+
+  <Accordion title="572+ icons and growing">
+    Comprehensive icon set covering common use cases, from UI elements to social media, with more added regularly.
+  </Accordion>
+
+  <Accordion title="TypeScript support">
+    Full TypeScript definitions with prop autocompletion and type safety.
+  </Accordion>
+</AccordionGroup>
+
+## Key Features
+
+### Delightful Animations
+
+Every icon includes carefully crafted animations that activate on hover and tap. From subtle scale effects to playful rotations and bounces, each animation enhances the user experience without being overwhelming.
+
+### Motion Integration
+
+All icons use Motion's powerful animation primitives:
+- `whileHover` for hover interactions
+- `whileTap` for click/tap feedback
+- Custom animation variants for complex effects
+- Automatic reduced motion support
+
+### shadcn-style Installation
+
+Install individual icons using the shadcn CLI:
+
+```bash
+pnpm dlx shadcn@latest add https://anicon.dev/r/icon-heart.json
+```
+
+The CLI automatically:
+- Copies the icon component to your project
+- Installs the `motion` dependency if needed
+- Sets up the proper file structure
+
+### Full Control
+
+Icons are installed directly in your codebase (typically in `components/ui/`), so you have complete control to:
+- Modify animation timings and effects
+- Change colors and styling
+- Add custom variants
+- Optimize for your specific use case
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Install Anicon" icon="download" href="/installation">
+    Set up Anicon in your project
+  </Card>
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Add your first animated icon
+  </Card>
+</CardGroup>

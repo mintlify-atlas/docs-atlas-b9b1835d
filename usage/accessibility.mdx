@@ -1,0 +1,565 @@
+---
+title: "Accessibility"
+description: "Ensure Anicon icons are accessible to all users with reduced motion support and ARIA attributes"
+---
+
+## Reduced Motion Support
+
+Anicon icons automatically respect the user's motion preferences using Framer Motion's `useReducedMotion()` hook. When a user has enabled "reduce motion" in their system settings, animations are completely disabled.
+
+### How It Works
+
+Every icon checks the user's motion preference:
+
+```tsx
+import { motion, useReducedMotion } from "framer-motion";
+
+export function IconHeart({ size = 24, strokeWidth = 2, ...props }) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      // Disable animation variants when reduced motion is preferred
+      initial={prefersReducedMotion ? false : "rest"}
+      animate={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      whileTap={prefersReducedMotion ? undefined : "tap"}
+      variants={beatVariants}
+      {...props}
+    >
+      {/* Icon paths */}
+    </motion.svg>
+  );
+}
+```
+
+### Testing Reduced Motion
+
+To test reduced motion support:
+
+<Tabs>
+  <Tab title="macOS">
+    1. Open **System Settings**
+    2. Go to **Accessibility** → **Display**
+    3. Enable **Reduce motion**
+    4. Refresh your browser
+  </Tab>
+  <Tab title="Windows">
+    1. Open **Settings**
+    2. Go to **Accessibility** → **Visual effects**
+    3. Turn off **Animation effects**
+    4. Refresh your browser
+  </Tab>
+  <Tab title="Developer Tools">
+    You can also emulate reduced motion in Chrome DevTools:
+    
+    1. Open DevTools (`F12`)
+    2. Open Command Palette (`Cmd/Ctrl + Shift + P`)
+    3. Type "Rendering"
+    4. Select **Show Rendering**
+    5. Find **Emulate CSS media feature prefers-reduced-motion**
+    6. Select **prefers-reduced-motion: reduce**
+  </Tab>
+</Tabs>
+
+## Implementation Details
+
+### Icon-Level Reduced Motion
+
+Here's how different icons handle reduced motion:
+
+<Tabs>
+  <Tab title="Heart Icon">
+    ```tsx
+    const prefersReducedMotion = useReducedMotion();
+
+    return (
+      <motion.svg
+        // When reduced motion is enabled:
+        // - initial: false (no initial animation)
+        // - animate: false (no animate state)
+        // - whileHover: undefined (no hover animation)
+        // - whileTap: undefined (no tap animation)
+        initial={prefersReducedMotion ? false : "rest"}
+        animate={prefersReducedMotion ? false : "rest"}
+        whileHover={prefersReducedMotion ? undefined : "hover"}
+        whileTap={prefersReducedMotion ? undefined : "tap"}
+        variants={beatVariants}
+      >
+        {/* Icon content */}
+      </motion.svg>
+    );
+    ```
+  </Tab>
+  <Tab title="Bell Icon">
+    ```tsx
+    const prefersReducedMotion = useReducedMotion();
+
+    return (
+      <motion.svg
+        variants={bellVariants}
+        initial={prefersReducedMotion ? false : "rest"}
+        whileHover={prefersReducedMotion ? undefined : "hover"}
+        whileTap={prefersReducedMotion ? undefined : "tap"}
+        style={{ originX: "50%", originY: "0%" }}
+      >
+        {/* Icon content */}
+      </motion.svg>
+    );
+    ```
+  </Tab>
+  <Tab title="Loader Icon">
+    ```tsx
+    const prefersReducedMotion = useReducedMotion();
+
+    return (
+      <motion.svg
+        // Loader uses empty object {} instead of specific variants
+        animate={prefersReducedMotion ? {} : { rotate: 360 }}
+        transition={
+          prefersReducedMotion
+            ? {}
+            : {
+                repeat: Infinity,
+                duration: 1,
+                ease: "linear",
+              }
+        }
+      >
+        {/* Icon content */}
+      </motion.svg>
+    );
+    ```
+  </Tab>
+  <Tab title="Arrow Icon">
+    ```tsx
+    const prefersReducedMotion = useReducedMotion();
+
+    return (
+      <motion.svg
+        initial="rest"
+        whileHover="hover"
+      >
+        {/* Variants applied to inner group instead */}
+        <motion.g variants={prefersReducedMotion ? {} : arrowVariants}>
+          <path d="m18 12-6-6-6 6" />
+          <path d="M12 18V6" />
+        </motion.g>
+      </motion.svg>
+    );
+    ```
+  </Tab>
+</Tabs>
+
+### Custom Icon with Reduced Motion
+
+When creating custom icons, always include reduced motion support:
+
+```tsx
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { animationConfig } from "@/lib/animation-config";
+
+const customVariants: Variants = {
+  rest: { scale: 1, rotate: 0 },
+  hover: {
+    scale: animationConfig.scales.grow,
+    rotate: animationConfig.rotations.small,
+    transition: animationConfig.transitions.spring,
+  },
+};
+
+export function CustomIcon({ size = 24, strokeWidth = 2, ...props }) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      variants={customVariants}
+      initial={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      className="select-none"
+      {...props}
+    >
+      {/* Your icon paths */}
+    </motion.svg>
+  );
+}
+```
+
+## ARIA Attributes
+
+### Decorative Icons
+
+If an icon is purely decorative (next to text), use `aria-hidden`:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function DecorativeExample() {
+  return (
+    <button>
+      <IconHeart aria-hidden="true" />
+      <span>Like</span>
+    </button>
+  );
+}
+```
+
+### Meaningful Icons
+
+If an icon conveys meaning without accompanying text, use `role` and `aria-label`:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function MeaningfulExample() {
+  return (
+    <button>
+      <IconHeart 
+        role="img" 
+        aria-label="Like this post"
+      />
+    </button>
+  );
+}
+```
+
+### Interactive Icons
+
+For clickable icons, ensure proper button semantics:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+import { useState } from "react";
+
+export default function InteractiveExample() {
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <button
+      onClick={() => setLiked(!liked)}
+      aria-pressed={liked}
+      aria-label={liked ? "Unlike" : "Like"}
+    >
+      <IconHeart 
+        aria-hidden="true"
+        className={liked ? "text-red-500" : "text-gray-400"}
+      />
+    </button>
+  );
+}
+```
+
+## Focus States
+
+All Anicon icons include focus management styles:
+
+```tsx
+className="outline-none focus:outline-none focus:ring-0 select-none"
+```
+
+For keyboard navigation, wrap icons in focusable elements:
+
+```tsx
+import { IconBell } from "@/components/icon-bell";
+
+export default function FocusExample() {
+  return (
+    <button 
+      className="focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg p-2"
+    >
+      <IconBell aria-label="Notifications" />
+    </button>
+  );
+}
+```
+
+## Color Contrast
+
+Ensure sufficient color contrast for icons:
+
+<Warning>
+  **WCAG Guidelines**: Icons must meet WCAG 2.1 Level AA contrast ratio of at least 3:1 against their background.
+</Warning>
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function ContrastExample() {
+  return (
+    <div>
+      {/* Good contrast */}
+      <div className="bg-white">
+        <IconHeart className="text-gray-900" /> {/* High contrast */}
+      </div>
+      
+      {/* Good contrast */}
+      <div className="bg-gray-900">
+        <IconHeart className="text-white" /> {/* High contrast */}
+      </div>
+      
+      {/* Poor contrast - avoid */}
+      <div className="bg-gray-100">
+        <IconHeart className="text-gray-200" /> {/* Low contrast ❌ */}
+      </div>
+    </div>
+  );
+}
+```
+
+## Screen Reader Support
+
+### Icon Buttons
+
+Provide accessible labels for icon-only buttons:
+
+```tsx
+import { IconHeart, IconBell, IconStar } from "@/components/icons";
+
+export default function IconButtons() {
+  return (
+    <nav aria-label="Actions">
+      <button aria-label="Like this post">
+        <IconHeart aria-hidden="true" />
+      </button>
+      
+      <button aria-label="View notifications">
+        <IconBell aria-hidden="true" />
+      </button>
+      
+      <button aria-label="Add to favorites">
+        <IconStar aria-hidden="true" />
+      </button>
+    </nav>
+  );
+}
+```
+
+### Status Icons
+
+For status indicators, provide both visual and text alternatives:
+
+```tsx
+import { IconCheck, IconX } from "@/components/icons";
+
+export default function StatusIcons() {
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <IconCheck className="text-green-500" aria-hidden="true" />
+        <span>Task completed</span>
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <IconX className="text-red-500" aria-hidden="true" />
+        <span>Task failed</span>
+      </div>
+    </div>
+  );
+}
+```
+
+### Hidden Status Text
+
+For visual-only status indicators, use visually hidden text:
+
+```tsx
+import { IconCheck } from "@/components/icon-check";
+
+export default function HiddenStatusText() {
+  return (
+    <div className="relative">
+      <IconCheck className="text-green-500" aria-hidden="true" />
+      <span className="sr-only">Success</span>
+    </div>
+  );
+}
+```
+
+```css
+/* Add this utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+```
+
+## Keyboard Navigation
+
+Ensure icons in interactive elements are keyboard accessible:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+import { useState } from "react";
+
+export default function KeyboardExample() {
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <button
+      onClick={() => setLiked(!liked)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setLiked(!liked);
+        }
+      }}
+      aria-pressed={liked}
+      aria-label={liked ? "Unlike" : "Like"}
+      className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-2"
+    >
+      <IconHeart 
+        aria-hidden="true"
+        className={liked ? "text-red-500" : "text-gray-400"}
+      />
+    </button>
+  );
+}
+```
+
+## Loading States
+
+For loading indicators, provide appropriate ARIA attributes:
+
+```tsx
+import { IconLoader } from "@/components/icon-loader";
+
+export default function LoadingExample() {
+  return (
+    <div 
+      role="status" 
+      aria-live="polite" 
+      aria-label="Loading"
+    >
+      <IconLoader aria-hidden="true" />
+      <span className="sr-only">Loading content...</span>
+    </div>
+  );
+}
+```
+
+## Best Practices Checklist
+
+<Check>
+  **Always use `useReducedMotion()`** - Respect user motion preferences
+</Check>
+
+<Check>
+  **Add `aria-hidden="true"`** - For decorative icons next to text
+</Check>
+
+<Check>
+  **Add `aria-label`** - For meaningful icons without accompanying text
+</Check>
+
+<Check>
+  **Ensure color contrast** - Meet WCAG 2.1 Level AA (3:1 minimum)
+</Check>
+
+<Check>
+  **Provide text alternatives** - Screen readers need text descriptions
+</Check>
+
+<Check>
+  **Test keyboard navigation** - All interactive icons must be keyboard accessible
+</Check>
+
+<Check>
+  **Use semantic HTML** - Wrap icons in proper `<button>` elements
+</Check>
+
+<Check>
+  **Test with screen readers** - Verify with VoiceOver (Mac) or NVDA (Windows)
+</Check>
+
+## Testing Accessibility
+
+### Automated Testing
+
+Use tools like axe DevTools or Lighthouse:
+
+```bash
+# Install axe-core for React
+npm install --save-dev @axe-core/react
+```
+
+```tsx
+import React from "react";
+
+if (process.env.NODE_ENV !== "production") {
+  import("@axe-core/react").then((axe) => {
+    axe.default(React, ReactDOM, 1000);
+  });
+}
+```
+
+### Manual Testing
+
+<Tabs>
+  <Tab title="Keyboard">
+    1. Navigate using `Tab` key
+    2. Activate with `Enter` or `Space`
+    3. Ensure focus is visible
+    4. Test all interactive icons
+  </Tab>
+  <Tab title="Screen Reader">
+    **macOS (VoiceOver):**
+    1. Press `Cmd + F5` to enable
+    2. Navigate with `VO + Arrow keys`
+    3. Verify labels are announced
+    
+    **Windows (NVDA):**
+    1. Install NVDA (free)
+    2. Press `Ctrl + Alt + N` to start
+    3. Navigate with arrow keys
+    4. Verify labels are announced
+  </Tab>
+  <Tab title="Reduced Motion">
+    1. Enable reduced motion in system settings
+    2. Refresh browser
+    3. Verify animations are disabled
+    4. Ensure icons remain functional
+  </Tab>
+</Tabs>
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="WCAG Guidelines" icon="book" href="https://www.w3.org/WAI/WCAG21/quickref/">
+    Web Content Accessibility Guidelines
+  </Card>
+  <Card title="MDN Accessibility" icon="book" href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">
+    Mozilla Developer Network accessibility resources
+  </Card>
+  <Card title="Framer Motion A11y" icon="book" href="https://www.framer.com/motion/accessibility/">
+    Framer Motion accessibility documentation
+  </Card>
+  <Card title="WebAIM" icon="book" href="https://webaim.org/">
+    Web accessibility resources and tools
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Basic Usage" icon="rocket" href="/usage/basic-usage">
+    Learn the basics of using Anicon
+  </Card>
+  <Card title="Customization" icon="palette" href="/usage/customization">
+    Customize icon appearance
+  </Card>
+</CardGroup>

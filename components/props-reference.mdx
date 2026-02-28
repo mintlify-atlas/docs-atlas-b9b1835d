@@ -1,0 +1,500 @@
+---
+title: 'Props Reference'
+description: 'Complete API documentation for Anicon component props'
+icon: 'book'
+---
+
+## Icon Component Props
+
+All Anicon components share a consistent props interface, making them easy to use and customize. Every icon accepts the same core props plus all standard SVG attributes.
+
+## Core Props
+
+These props are available on every Anicon component.
+
+<ParamField path="size" type="number" default="24">
+  The size of the icon in pixels. Sets both width and height to maintain a square aspect ratio.
+  
+  ```tsx
+  <IconHeart size={16} /> // Small
+  <IconHeart size={24} /> // Default
+  <IconHeart size={32} /> // Medium
+  <IconHeart size={48} /> // Large
+  ```
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default="2">
+  The width of the icon's stroke in pixels. Affects the thickness/boldness of the icon lines.
+  
+  ```tsx
+  <IconHeart strokeWidth={1} />  // Thin
+  <IconHeart strokeWidth={2} />  // Default
+  <IconHeart strokeWidth={3} />  // Bold
+  <IconHeart strokeWidth={4} />  // Extra bold
+  ```
+</ParamField>
+
+<ParamField path="className" type="string">
+  CSS classes to apply to the icon. Commonly used for colors, spacing, and custom styles.
+  
+  ```tsx
+  // Tailwind CSS classes
+  <IconHeart className="text-rose-500" />
+  <IconHeart className="text-blue-400 hover:text-blue-500" />
+  <IconHeart className="text-emerald-400 w-6 h-6" />
+  
+  // Custom CSS classes
+  <IconHeart className="my-custom-icon" />
+  ```
+  
+  <Note>
+    The `className` prop is merged with the icon's internal classes. Colors are controlled via the `text-*` utility classes since icons use `stroke="currentColor"`.
+  </Note>
+</ParamField>
+
+## Standard SVG Props
+
+All Anicon components extend `React.SVGProps<SVGSVGElement>`, meaning they accept all standard SVG attributes.
+
+### Common SVG Attributes
+
+<ParamField path="id" type="string">
+  HTML id attribute for the SVG element.
+  
+  ```tsx
+  <IconHeart id="favorite-heart" />
+  ```
+</ParamField>
+
+<ParamField path="aria-label" type="string">
+  Accessibility label for screen readers.
+  
+  ```tsx
+  <IconHeart aria-label="Add to favorites" />
+  <IconTrash aria-label="Delete item" />
+  ```
+  
+  <Tip>
+    Always provide `aria-label` for icon-only buttons to ensure accessibility.
+  </Tip>
+</ParamField>
+
+<ParamField path="aria-hidden" type="boolean">
+  Hide the icon from screen readers when it's purely decorative.
+  
+  ```tsx
+  <button>
+    <IconHeart aria-hidden="true" />
+    Add to Favorites
+  </button>
+  ```
+</ParamField>
+
+<ParamField path="role" type="string">
+  ARIA role for the element.
+  
+  ```tsx
+  <IconHeart role="img" aria-label="Heart icon" />
+  ```
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the SVG element.
+  
+  ```tsx
+  <IconHeart style={{ color: '#ef4444', marginRight: '8px' }} />
+  ```
+</ParamField>
+
+<ParamField path="viewBox" type="string" default="0 0 24 24">
+  The SVG viewBox attribute. Generally not needed as icons have a default viewBox.
+  
+  ```tsx
+  <IconHeart viewBox="0 0 24 24" />
+  ```
+</ParamField>
+
+### SVG Stroke Attributes
+
+<ParamField path="stroke" type="string" default="currentColor">
+  The stroke color. By default, icons use `currentColor` to inherit text color from CSS.
+  
+  ```tsx
+  <IconHeart stroke="#ef4444" />
+  <IconHeart stroke="rgb(239, 68, 68)" />
+  ```
+  
+  <Warning>
+    Prefer using `className` with Tailwind's `text-*` utilities instead of the `stroke` prop for better consistency.
+  </Warning>
+</ParamField>
+
+<ParamField path="strokeLinecap" type="'butt' | 'round' | 'square'" default="round">
+  The shape of stroke endpoints.
+</ParamField>
+
+<ParamField path="strokeLinejoin" type="'miter' | 'round' | 'bevel'" default="round">
+  The shape of stroke corners.
+</ParamField>
+
+<ParamField path="fill" type="string" default="none">
+  The fill color for the icon. Most Anicon icons use strokes, so fill is typically `"none"`.
+  
+  ```tsx
+  <IconHeart fill="#ef4444" />
+  ```
+</ParamField>
+
+## Event Handlers
+
+All standard React event handlers are supported.
+
+<ParamField path="onClick" type="(event: React.MouseEvent) => void">
+  Click event handler.
+  
+  ```tsx
+  <IconHeart 
+    onClick={(e) => console.log('Heart clicked!')} 
+    className="cursor-pointer"
+  />
+  ```
+</ParamField>
+
+<ParamField path="onMouseEnter" type="(event: React.MouseEvent) => void">
+  Mouse enter event handler.
+  
+  ```tsx
+  <IconHeart onMouseEnter={() => setHovered(true)} />
+  ```
+</ParamField>
+
+<ParamField path="onMouseLeave" type="(event: React.MouseEvent) => void">
+  Mouse leave event handler.
+  
+  ```tsx
+  <IconHeart onMouseLeave={() => setHovered(false)} />
+  ```
+</ParamField>
+
+<ParamField path="onFocus" type="(event: React.FocusEvent) => void">
+  Focus event handler.
+  
+  ```tsx
+  <IconHeart onFocus={() => console.log('Focused')} />
+  ```
+</ParamField>
+
+<ParamField path="onBlur" type="(event: React.FocusEvent) => void">
+  Blur event handler.
+</ParamField>
+
+## Animation-Related Props
+
+<Warning>
+Framer Motion's animation event handlers (`onAnimationStart`, `onAnimationEnd`) and drag handlers (`onDragStart`, `onDrag`, `onDragEnd`) are filtered out internally to prevent conflicts. These props are not available on Anicon components.
+</Warning>
+
+## TypeScript Interface
+
+Here's the exact TypeScript interface used by all Anicon components:
+
+```tsx icon-heart.tsx
+export interface IconHeartProps extends React.SVGProps<SVGSVGElement> {
+  /** Size in pixels. Default 24 */
+  size?: number;
+  /** Stroke width. Default 2 */
+  strokeWidth?: number;
+}
+
+export function IconHeart({ 
+  size = 24, 
+  strokeWidth = 2, 
+  className, 
+  ...props 
+}: IconHeartProps) {
+  const {
+    onAnimationStart,
+    onAnimationEnd,
+    onDragStart,
+    onDrag,
+    onDragEnd,
+    ...rest
+  } = props;
+  
+  // Animation and rendering logic...
+}
+```
+
+<Note>
+While the interface is named `IconHeartProps`, each icon component has its own interface (e.g., `IconBellProps`, `IconLoaderProps`) following the pattern `Icon{Name}Props`. They all extend `React.SVGProps<SVGSVGElement>` with the same `size` and `strokeWidth` additions.
+</Note>
+
+## Usage Examples
+
+### Basic Usage
+
+```tsx
+import { IconHeart } from "@/components/icons/icon-heart";
+
+function Example() {
+  return <IconHeart />; // Uses all defaults
+}
+```
+
+### Customized Icon
+
+```tsx
+import { IconHeart } from "@/components/icons/icon-heart";
+
+function Example() {
+  return (
+    <IconHeart 
+      size={32}
+      strokeWidth={3}
+      className="text-rose-500 hover:text-rose-600"
+    />
+  );
+}
+```
+
+### Interactive Button
+
+```tsx
+import { IconHeart } from "@/components/icons/icon-heart";
+import { useState } from "react";
+
+function FavoriteButton() {
+  const [liked, setLiked] = useState(false);
+  
+  return (
+    <button
+      onClick={() => setLiked(!liked)}
+      className="p-2 rounded-lg hover:bg-gray-100"
+      aria-label={liked ? "Remove from favorites" : "Add to favorites"}
+    >
+      <IconHeart
+        className={liked ? "text-rose-500" : "text-gray-400"}
+        size={24}
+      />
+    </button>
+  );
+}
+```
+
+### Multiple Icons with Consistent Styling
+
+```tsx
+import { IconHeart, IconStar, IconBookmark } from "@/components/icons";
+
+function ActionBar() {
+  const iconProps = {
+    size: 20,
+    strokeWidth: 2,
+    className: "text-gray-600 hover:text-gray-900"
+  };
+  
+  return (
+    <div className="flex gap-2">
+      <button><IconHeart {...iconProps} /></button>
+      <button><IconStar {...iconProps} /></button>
+      <button><IconBookmark {...iconProps} /></button>
+    </div>
+  );
+}
+```
+
+### Responsive Sizing
+
+```tsx
+import { IconMenu } from "@/components/icons/icon-menu";
+
+function Navigation() {
+  return (
+    <button className="md:hidden">
+      {/* Larger on small screens */}
+      <IconMenu 
+        size={32}
+        className="text-gray-700 sm:w-6 sm:h-6"
+      />
+    </button>
+  );
+}
+```
+
+### Accessibility Example
+
+```tsx
+import { IconTrash, IconEdit, IconDownload } from "@/components/icons";
+
+function DocumentActions() {
+  return (
+    <div role="group" aria-label="Document actions">
+      <button aria-label="Edit document">
+        <IconEdit size={20} aria-hidden="true" />
+      </button>
+      <button aria-label="Download document">
+        <IconDownload size={20} aria-hidden="true" />
+      </button>
+      <button aria-label="Delete document">
+        <IconTrash size={20} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+```
+
+### Custom Styling
+
+```tsx
+import { IconLoader } from "@/components/icons/icon-loader";
+
+function LoadingSpinner() {
+  return (
+    <IconLoader
+      size={40}
+      strokeWidth={2}
+      className="text-blue-500"
+      style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}
+    />
+  );
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use Semantic Sizing" icon="ruler">
+    Choose sizes that match your design system:
+    
+    - **16px** - Small icons in compact UI
+    - **20px** - Default icon size in text
+    - **24px** - Standard icon size (default)
+    - **32px** - Larger interactive elements
+    - **48px+** - Hero sections or feature highlights
+  </Accordion>
+
+  <Accordion title="Maintain Consistent Stroke Width" icon="pen-ruler">
+    Use consistent `strokeWidth` across your application:
+    
+    - **1px** - Thin, delicate icons
+    - **2px** - Standard weight (default)
+    - **3px** - Bold, prominent icons
+    
+    Avoid mixing stroke widths within the same UI section.
+  </Accordion>
+
+  <Accordion title="Color with Tailwind Utilities" icon="palette">
+    Prefer Tailwind's `text-*` utilities over direct stroke colors:
+    
+    ```tsx
+    // Good
+    <IconHeart className="text-rose-500" />
+    
+    // Avoid
+    <IconHeart stroke="#ef4444" />
+    ```
+    
+    This maintains consistency with your design system and enables easy theme switching.
+  </Accordion>
+
+  <Accordion title="Always Provide Accessibility Labels" icon="universal-access">
+    For icon-only buttons, always include `aria-label`:
+    
+    ```tsx
+    // Interactive icons need labels
+    <button aria-label="Close dialog">
+      <IconX />
+    </button>
+    
+    // Decorative icons should be hidden
+    <div>
+      <IconCheck aria-hidden="true" />
+      Success!
+    </div>
+    ```
+  </Accordion>
+
+  <Accordion title="Leverage Hover States" icon="hand-pointer">
+    Combine icon animations with CSS transitions:
+    
+    ```tsx
+    <button className="group">
+      <IconArrowRight className="text-blue-500 transition-colors group-hover:text-blue-600" />
+    </button>
+    ```
+    
+    The icon's built-in Framer Motion animation works beautifully with CSS transitions.
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Icon with Text
+
+```tsx
+import { IconHeart } from "@/components/icons/icon-heart";
+
+function LikeButton() {
+  return (
+    <button className="flex items-center gap-2">
+      <IconHeart size={20} />
+      <span>Like</span>
+    </button>
+  );
+}
+```
+
+### Loading State
+
+```tsx
+import { IconLoader } from "@/components/icons/icon-loader";
+
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
+  return (
+    <button disabled={isLoading}>
+      {isLoading ? (
+        <IconLoader size={20} className="text-white" />
+      ) : (
+        "Submit"
+      )}
+    </button>
+  );
+}
+```
+
+### Icon Grid
+
+```tsx
+import { IconHome, IconSearch, IconUser, IconSettings } from "@/components/icons";
+
+function AppGrid() {
+  const apps = [
+    { icon: IconHome, label: "Home" },
+    { icon: IconSearch, label: "Search" },
+    { icon: IconUser, label: "Profile" },
+    { icon: IconSettings, label: "Settings" },
+  ];
+  
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {apps.map(({ icon: Icon, label }) => (
+        <button key={label} className="flex flex-col items-center gap-2">
+          <Icon size={32} />
+          <span className="text-sm">{label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Animation Variants" icon="wand-sparkles" href="/components/animation-variants">
+    Learn about animation configuration and transitions
+  </Card>
+  <Card title="Icon Categories" icon="grid" href="/components/icon-categories">
+    Browse all 572+ icons organized by category
+  </Card>
+</CardGroup>

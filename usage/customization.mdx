@@ -1,0 +1,363 @@
+---
+title: "Customization"
+description: "Customize icon appearance including size, color, stroke width, and more"
+---
+
+## Size Customization
+
+Control icon size using the `size` prop (in pixels):
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function SizeExample() {
+  return (
+    <div className="flex items-center gap-4">
+      <IconHeart size={16} />  {/* Small */}
+      <IconHeart size={24} />  {/* Default */}
+      <IconHeart size={32} />  {/* Large */}
+      <IconHeart size={48} />  {/* Extra large */}
+    </div>
+  );
+}
+```
+
+<Note>
+  The `size` prop sets both `width` and `height` to maintain a square aspect ratio.
+</Note>
+
+## Stroke Width
+
+Adjust line thickness using the `strokeWidth` prop:
+
+<Tabs>
+  <Tab title="Preview">
+    ```tsx
+    import { IconBell } from "@/components/icon-bell";
+
+    export default function StrokeExample() {
+      return (
+        <div className="flex items-center gap-4">
+          <IconBell strokeWidth={1} />    {/* Thin */}
+          <IconBell strokeWidth={2} />    {/* Default */}
+          <IconBell strokeWidth={3} />    {/* Bold */}
+          <IconBell strokeWidth={4} />    {/* Extra bold */}
+        </div>
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Different Icons">
+    ```tsx
+    import { IconHeart, IconStar, IconBell } from "@/components/icons";
+
+    export default function Example() {
+      return (
+        <div className="flex gap-4">
+          <IconHeart size={32} strokeWidth={1.5} />
+          <IconStar size={32} strokeWidth={2} />
+          <IconBell size={32} strokeWidth={2.5} />
+        </div>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Color Customization
+
+Icons use `currentColor` for their stroke, so they inherit color from their parent or CSS:
+
+### Using Tailwind CSS
+
+```tsx
+import { IconHeart, IconBell, IconStar } from "@/components/icons";
+
+export default function ColorExample() {
+  return (
+    <div className="flex gap-4">
+      <IconHeart className="text-red-500" />
+      <IconBell className="text-blue-500" />
+      <IconStar className="text-yellow-500" />
+      
+      {/* With hover effects */}
+      <IconHeart className="text-red-500 hover:text-red-600 transition-colors" />
+      
+      {/* Dark mode support */}
+      <IconBell className="text-blue-500 dark:text-blue-400" />
+    </div>
+  );
+}
+```
+
+### Using Inline Styles
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function InlineStyleExample() {
+  return (
+    <div>
+      <IconHeart style={{ color: "#ef4444" }} />
+      <IconHeart style={{ color: "rgb(239, 68, 68)" }} />
+      <IconHeart style={{ color: "var(--color-primary)" }} />
+    </div>
+  );
+}
+```
+
+### Using CSS Classes
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+import "./styles.css";
+
+export default function CSSExample() {
+  return (
+    <div>
+      <IconHeart className="icon-primary" />
+      <IconHeart className="icon-secondary" />
+    </div>
+  );
+}
+```
+
+```css
+/* styles.css */
+.icon-primary {
+  color: #ef4444;
+}
+
+.icon-secondary {
+  color: #3b82f6;
+}
+
+.icon-primary:hover {
+  color: #dc2626;
+}
+```
+
+## Combining Props
+
+Combine multiple props for complete customization:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function CombinedExample() {
+  return (
+    <div className="flex gap-6">
+      {/* Small, thin, gray */}
+      <IconHeart 
+        size={20} 
+        strokeWidth={1.5} 
+        className="text-gray-400"
+      />
+      
+      {/* Large, bold, red */}
+      <IconHeart 
+        size={40} 
+        strokeWidth={3} 
+        className="text-red-500"
+      />
+      
+      {/* Medium, default stroke, blue with hover */}
+      <IconHeart 
+        size={28} 
+        strokeWidth={2} 
+        className="text-blue-500 hover:text-blue-600 cursor-pointer"
+      />
+    </div>
+  );
+}
+```
+
+## Advanced Styling
+
+### Custom Transform Origin
+
+Some icons set a custom transform origin for their animations. You can override this:
+
+```tsx
+import { IconBell } from "@/components/icon-bell";
+
+export default function TransformExample() {
+  return (
+    <IconBell 
+      style={{ 
+        transformOrigin: "center center" // Override default top center
+      }}
+    />
+  );
+}
+```
+
+### Adding Filters and Effects
+
+```tsx
+import { IconStar } from "@/components/icon-star";
+
+export default function EffectsExample() {
+  return (
+    <div className="flex gap-4">
+      {/* Drop shadow */}
+      <IconStar 
+        className="text-yellow-500"
+        style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}
+      />
+      
+      {/* Blur on hover */}
+      <IconStar 
+        className="text-yellow-500 hover:blur-sm transition-all"
+      />
+      
+      {/* Opacity */}
+      <IconStar 
+        className="text-yellow-500 opacity-70 hover:opacity-100 transition-opacity"
+      />
+    </div>
+  );
+}
+```
+
+### Responsive Sizing
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+
+export default function ResponsiveExample() {
+  return (
+    <div>
+      {/* Using Tailwind responsive classes */}
+      <IconHeart 
+        size={20}
+        className="sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10"
+      />
+      
+      {/* Using CSS custom properties */}
+      <IconHeart 
+        style={{
+          width: "var(--icon-size, 24px)",
+          height: "var(--icon-size, 24px)"
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Preset Configurations
+
+Create reusable icon configurations:
+
+```tsx
+import { IconHeart, IconBell, IconStar } from "@/components/icons";
+import type { IconHeartProps } from "@/components/icon-heart";
+
+// Define preset configurations
+const iconPresets = {
+  small: { size: 16, strokeWidth: 1.5 } as const,
+  medium: { size: 24, strokeWidth: 2 } as const,
+  large: { size: 32, strokeWidth: 2.5 } as const,
+};
+
+export default function PresetExample() {
+  return (
+    <div className="flex gap-4">
+      <IconHeart {...iconPresets.small} className="text-red-500" />
+      <IconBell {...iconPresets.medium} className="text-blue-500" />
+      <IconStar {...iconPresets.large} className="text-yellow-500" />
+    </div>
+  );
+}
+```
+
+## Custom Icon Wrapper
+
+Create a wrapper component for consistent styling:
+
+```tsx
+import type { IconProps } from "@/lib/types";
+
+interface CustomIconProps extends IconProps {
+  variant?: "primary" | "secondary" | "success" | "danger";
+}
+
+const variantStyles = {
+  primary: "text-blue-500 hover:text-blue-600",
+  secondary: "text-gray-500 hover:text-gray-600",
+  success: "text-green-500 hover:text-green-600",
+  danger: "text-red-500 hover:text-red-600",
+};
+
+export function CustomIcon({ 
+  variant = "primary", 
+  className,
+  children,
+  ...props 
+}: CustomIconProps & { children: React.ReactNode }) {
+  return (
+    <div className={`${variantStyles[variant]} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+// Usage
+import { IconHeart } from "@/components/icon-heart";
+
+<CustomIcon variant="danger">
+  <IconHeart />
+</CustomIcon>
+```
+
+## Property Reference
+
+<ParamField path="size" type="number" default="24">
+  Icon size in pixels. Sets both width and height.
+  
+  **Example values:**
+  - `16` - Small icons
+  - `24` - Default size
+  - `32` - Large icons
+  - `48` - Extra large icons
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default="2">
+  Stroke width in pixels. Controls line thickness.
+  
+  **Example values:**
+  - `1` - Thin lines
+  - `2` - Default thickness
+  - `3` - Bold lines
+  - `4` - Extra bold lines
+</ParamField>
+
+<ParamField path="className" type="string">
+  CSS classes to apply. Useful for Tailwind or custom styles.
+  
+  **Examples:**
+  - `"text-red-500"` - Set color
+  - `"w-8 h-8"` - Override size
+  - `"hover:text-blue-600"` - Hover effects
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles object for custom CSS.
+  
+  **Examples:**
+  - `{{ color: "#ef4444" }}` - Set color
+  - `{{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}` - Add shadow
+  - `{{ cursor: "pointer" }}` - Change cursor
+</ParamField>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Animation Config" icon="wand-magic-sparkles" href="/usage/animation-config">
+    Learn about animation configurations and timing
+  </Card>
+  <Card title="Accessibility" icon="universal-access" href="/usage/accessibility">
+    Make your icons accessible to all users
+  </Card>
+</CardGroup>

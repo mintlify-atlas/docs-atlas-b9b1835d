@@ -1,0 +1,233 @@
+---
+title: "Basic Usage"
+description: "Learn how to import and use Anicon components in your React application"
+---
+
+## Importing Icons
+
+Anicon icons are React components that can be imported individually. Each icon is a self-contained component with built-in animations.
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+import { IconBell } from "@/components/icon-bell";
+import { IconStar } from "@/components/icon-star";
+```
+
+## Basic Example
+
+Use icons like any other React component:
+
+```tsx
+export default function App() {
+  return (
+    <div>
+      <IconHeart />
+      <IconBell />
+      <IconStar />
+    </div>
+  );
+}
+```
+
+## Props Interface
+
+All Anicon icons extend React's `SVGProps<SVGSVGElement>` and include additional props for customization:
+
+<ParamField path="size" type="number" default="24">
+  Icon size in pixels. Controls both width and height.
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default="2">
+  Stroke width for the icon paths.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the icon.
+</ParamField>
+
+<ParamField path="...props" type="SVGProps<SVGSVGElement>">
+  All standard SVG props are supported (style, onClick, etc.)
+  
+  **Note:** The following props are excluded to avoid conflicts with Framer Motion:
+  - `onAnimationStart`
+  - `onAnimationEnd`
+  - `onDragStart`
+  - `onDrag`
+  - `onDragEnd`
+</ParamField>
+
+## Complete Examples
+
+<Tabs>
+  <Tab title="Heart Icon">
+    ```tsx
+    import { IconHeart } from "@/components/icon-heart";
+
+    export default function Example() {
+      return (
+        <IconHeart 
+          size={24} 
+          strokeWidth={2} 
+          className="text-red-500"
+        />
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Bell Icon">
+    ```tsx
+    import { IconBell } from "@/components/icon-bell";
+
+    export default function Example() {
+      return (
+        <IconBell 
+          size={32} 
+          strokeWidth={2.5} 
+          className="text-blue-600"
+        />
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Star Icon">
+    ```tsx
+    import { IconStar } from "@/components/icon-star";
+
+    export default function Example() {
+      return (
+        <IconStar 
+          size={28} 
+          strokeWidth={2} 
+          className="text-yellow-500"
+        />
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Interactive Icons
+
+All Anicon icons are interactive by default. They respond to hover and tap events with smooth animations:
+
+```tsx
+import { IconHeart, IconBell, IconLoader } from "@/components/icons";
+
+export default function InteractiveExample() {
+  return (
+    <div className="flex gap-4">
+      {/* Heart scales and beats on hover */}
+      <IconHeart className="text-red-500 cursor-pointer" />
+      
+      {/* Bell rings on hover */}
+      <IconBell className="text-blue-500 cursor-pointer" />
+      
+      {/* Loader spins continuously */}
+      <IconLoader className="text-gray-500" />
+    </div>
+  );
+}
+```
+
+## Using with Click Handlers
+
+Since icons extend standard SVG props, you can attach event handlers:
+
+```tsx
+import { IconHeart } from "@/components/icon-heart";
+import { useState } from "react";
+
+export default function ClickableIcon() {
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <IconHeart
+      onClick={() => setLiked(!liked)}
+      className={liked ? "text-red-500" : "text-gray-400"}
+      style={{ cursor: "pointer" }}
+    />
+  );
+}
+```
+
+## Styling Icons
+
+Icons use `currentColor` for their stroke, so they inherit text color:
+
+<Tabs>
+  <Tab title="Tailwind CSS">
+    ```tsx
+    <IconHeart className="text-red-500 hover:text-red-600" />
+    <IconBell className="text-blue-500 dark:text-blue-400" />
+    <IconStar className="text-yellow-500 w-8 h-8" />
+    ```
+  </Tab>
+  <Tab title="Inline Styles">
+    ```tsx
+    <IconHeart 
+      style={{ 
+        color: "#ef4444",
+        cursor: "pointer" 
+      }} 
+    />
+    ```
+  </Tab>
+  <Tab title="CSS Modules">
+    ```tsx
+    import styles from "./styles.module.css";
+
+    <IconHeart className={styles.icon} />
+    ```
+    
+    ```css
+    /* styles.module.css */
+    .icon {
+      color: #ef4444;
+      transition: color 0.2s;
+    }
+    
+    .icon:hover {
+      color: #dc2626;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## TypeScript Support
+
+All icons are fully typed with TypeScript:
+
+```tsx
+import { IconHeart, type IconHeartProps } from "@/components/icon-heart";
+
+interface ButtonProps {
+  icon: React.ComponentType<IconHeartProps>;
+  label: string;
+}
+
+function IconButton({ icon: Icon, label }: ButtonProps) {
+  return (
+    <button>
+      <Icon size={20} strokeWidth={2} />
+      <span>{label}</span>
+    </button>
+  );
+}
+
+// Usage
+<IconButton icon={IconHeart} label="Like" />
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Customization" icon="palette" href="/usage/customization">
+    Learn how to customize icon size, color, and stroke width
+  </Card>
+  <Card title="Animation Config" icon="wand-magic-sparkles" href="/usage/animation-config">
+    Explore animation configurations and timing
+  </Card>
+  <Card title="Accessibility" icon="universal-access" href="/usage/accessibility">
+    Ensure your icons are accessible to all users
+  </Card>
+</CardGroup>

@@ -1,0 +1,479 @@
+---
+title: Registry Setup and Build Process
+description: Understand how the Anicon registry works and how to build it for distribution
+---
+
+Learn how Anicon uses the shadcn registry format to distribute animated icons as installable components.
+
+## Overview
+
+Anicon uses [shadcn's registry system](https://ui.shadcn.com/docs/registry) to enable CLI-based installation. When users run:
+
+```bash
+pnpm dlx shadcn@latest add https://your-site.com/r/icon-heart.json
+```
+
+The shadcn CLI:
+1. Fetches the JSON file from your registry
+2. Copies the component to the user's project
+3. Installs required dependencies (like `motion`)
+4. Configures the component based on their `components.json`
+
+## Registry Structure
+
+### File Organization
+
+```
+project-root/
+├── registry/
+│   └── default/
+│       ├── icon-heart/
+│       │   └── icon-heart.tsx
+│       ├── icon-sparkle/
+│       │   └── icon-sparkle.tsx
+│       └── ...
+├── registry.json          # Registry configuration
+├── public/
+│   └── r/                 # Generated JSON files (after build)
+│       ├── icon-heart.json
+│       ├── icon-sparkle.json
+│       └── ...
+└── package.json
+```
+
+### Registry Configuration
+
+The `registry.json` file defines all icons in your registry:
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "anicon",
+  "homepage": "https://github.com/gohelboy/anicon",
+  "items": [
+    {
+      "name": "icon-heart",
+      "type": "registry:component",
+      "title": "Animated Heart",
+      "description": "Heart with hover and tap scale animation.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "registry/default/icon-heart/icon-heart.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "icon-sparkle",
+      "type": "registry:component",
+      "title": "Animated Sparkle",
+      "description": "Sparkle with hover and tap scale and rotate.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "registry/default/icon-sparkle/icon-sparkle.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Schema Fields
+
+**Top-level:**
+- `$schema`: Points to shadcn's registry schema (required for validation)
+- `name`: Registry identifier ("anicon")
+- `homepage`: URL to your repository or homepage
+- `items`: Array of all icon entries
+
+**Item fields:**
+- `name`: Unique identifier for the icon (used in CLI commands)
+- `type`: Always `"registry:component"` for components
+- `title`: Human-readable title shown in documentation
+- `description`: Brief description of the animation behavior
+- `dependencies`: Array of npm packages required (typically `["motion"]`)
+- `files`: Array of file objects defining component paths
+
+**File object:**
+- `path`: Relative path from project root to the component file
+- `type`: File type (typically `"registry:component"`)
+
+## Building the Registry
+
+### Build Command
+
+To generate distributable JSON files:
+
+```bash
+npm run registry:build
+```
+
+This runs the `shadcn build` command defined in `package.json`:
+
+```json
+{
+  "scripts": {
+    "registry:build": "shadcn build"
+  }
+}
+```
+
+### What Happens During Build
+
+<Steps>
+
+### Read registry.json
+
+The build script reads your `registry.json` configuration.
+
+### Process Each Item
+
+For each item in the `items` array:
+- Reads the component file(s)
+- Extracts the source code
+- Packages metadata (dependencies, description, etc.)
+
+### Generate JSON Files
+
+Creates individual JSON files in `public/r/`:
+
+```json
+// public/r/icon-heart.json
+{
+  "name": "icon-heart",
+  "type": "registry:component",
+  "dependencies": ["motion"],
+  "files": [
+    {
+      "name": "icon-heart.tsx",
+      "content": "// Full component source code here"
+    }
+  ]
+}
+```
+
+### Output Confirmation
+
+You'll see build output:
+
+```bash
+✓ Building registry...
+✓ Built icon-heart.json
+✓ Built icon-sparkle.json
+✓ Registry built successfully
+```
+
+</Steps>
+
+### Output Files
+
+After building, your `public/r/` directory contains:
+
+```
+public/r/
+├── icon-heart.json
+├── icon-sparkle.json
+├── icon-accessibility.json
+└── ... (one file per icon)
+```
+
+These files are served by your Next.js app and accessed by the shadcn CLI.
+
+## Local Development
+
+### Development Workflow
+
+1. **Start dev server** to preview changes:
+   ```bash
+   npm run dev
+   ```
+
+2. **Make changes** to icons in `registry/default/`
+
+3. **Update registry.json** if adding/removing icons
+
+4. **Build registry** when ready to test installation:
+   ```bash
+   npm run registry:build
+   ```
+
+5. **Test installation** in a separate project:
+   ```bash
+   pnpm dlx shadcn@latest add http://localhost:3000/r/icon-heart.json
+   ```
+
+### Testing Installation Locally
+
+Create a test Next.js project with shadcn:
+
+```bash
+# In a separate directory
+npx create-next-app@latest my-test-app
+cd my-test-app
+
+# Initialize shadcn
+pnpm dlx shadcn@latest init
+
+# Install icon from local registry (make sure dev server is running)
+pnpm dlx shadcn@latest add http://localhost:3000/r/icon-heart.json
+```
+
+Verify the icon was copied to `components/ui/icon-heart.tsx` and test it:
+
+```tsx
+import { IconHeart } from "@/components/ui/icon-heart";
+
+export default function Home() {
+  return <IconHeart />;
+}
+```
+
+## Deployment
+
+### Prerequisites
+
+1. Build the registry:
+   ```bash
+   npm run registry:build
+   ```
+
+2. Build your Next.js app:
+   ```bash
+   npm run build
+   ```
+
+3. Verify `public/r/` contains all JSON files
+
+### Deploy to Vercel
+
+Anicon is designed for Vercel deployment:
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+Vercel automatically serves files from the `public/` directory, making your registry accessible at:
+
+```
+https://your-site.vercel.app/r/icon-heart.json
+```
+
+### Deploy to Other Platforms
+
+**Netlify:**
+```bash
+# netlify.toml
+[build]
+  command = "npm run registry:build && npm run build"
+  publish = ".next"
+```
+
+**Custom Server:**
+Ensure your hosting serves static files from `public/` and supports Next.js.
+
+## Making Icons Available
+
+### Update Documentation
+
+After deployment, update your installation instructions with the production URL:
+
+```bash
+pnpm dlx shadcn@latest add https://anicon.vercel.app/r/icon-heart.json
+```
+
+### Share Registry URL
+
+Users can install icons from your deployed registry:
+
+```bash
+# Install single icon
+pnpm dlx shadcn@latest add https://your-site.com/r/icon-name.json
+
+# Browse available icons
+# Visit https://your-site.com to see the showcase
+```
+
+## Continuous Integration
+
+### GitHub Actions Example
+
+Automate registry builds on every commit:
+
+```yaml
+name: Build Registry
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build registry
+        run: npm run registry:build
+        
+      - name: Build Next.js
+        run: npm run build
+        
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.PROJECT_ID }}
+```
+
+## Troubleshooting
+
+### Build fails with "File not found"
+
+**Problem:** Registry references a file that doesn't exist.
+
+**Solution:** Verify all paths in `registry.json` match actual files:
+
+```bash
+# Check file exists
+ls registry/default/icon-heart/icon-heart.tsx
+```
+
+### Icons not appearing after deployment
+
+**Problem:** JSON files not being served.
+
+**Solution:**
+1. Verify build ran: `npm run registry:build`
+2. Check `public/r/` contains JSON files
+3. Ensure hosting serves `public/` directory
+4. Test URL directly: `https://your-site.com/r/icon-heart.json`
+
+### Installation fails with "Invalid registry"
+
+**Problem:** JSON format doesn't match shadcn schema.
+
+**Solution:** Validate `registry.json` structure:
+- Ensure `$schema` field is present
+- Verify all required fields exist
+- Check JSON syntax with a validator
+
+### Dependency not installed
+
+**Problem:** `motion` not added to user's project.
+
+**Solution:** Ensure `dependencies` array includes `"motion"`:
+
+```json
+{
+  "name": "icon-heart",
+  "dependencies": ["motion"], // This is required
+  "files": [/*...*/]
+}
+```
+
+## Advanced Topics
+
+### Multiple File Components
+
+If an icon requires multiple files:
+
+```json
+{
+  "name": "icon-complex",
+  "type": "registry:component",
+  "files": [
+    {
+      "path": "registry/default/icon-complex/icon-complex.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/default/icon-complex/helpers.ts",
+      "type": "registry:lib"
+    }
+  ]
+}
+```
+
+### Custom Dependencies
+
+Add additional dependencies if needed:
+
+```json
+{
+  "name": "icon-special",
+  "dependencies": ["motion", "@/lib/utils"],
+  "files": [/*...*/]
+}
+```
+
+### Automated Registry Generation
+
+The `reconstruct_registry.js` script can regenerate `registry.json` from icon metadata:
+
+```javascript
+// Example: Auto-generate registry from icon files
+const fs = require('fs');
+const path = require('path');
+
+const iconsDir = 'registry/default';
+const items = [];
+
+fs.readdirSync(iconsDir).forEach(dir => {
+  const name = dir;
+  const title = name
+    .replace('icon-', '')
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+    
+  items.push({
+    name,
+    type: 'registry:component',
+    title: `Animated ${title}`,
+    description: `${title} icon with animation.`,
+    dependencies: ['motion'],
+    files: [{
+      path: `registry/default/${name}/${name}.tsx`,
+      type: 'registry:component'
+    }]
+  });
+});
+
+const registry = {
+  $schema: 'https://ui.shadcn.com/schema/registry.json',
+  name: 'anicon',
+  homepage: 'https://github.com/gohelboy/anicon',
+  items
+};
+
+fs.writeFileSync('registry.json', JSON.stringify(registry, null, 2));
+```
+
+## Next Steps
+
+- Learn how to [add icons to the registry](/guides/adding-icons)
+- Explore [creating custom icon animations](/guides/creating-custom-icons)
+- Read [shadcn registry documentation](https://ui.shadcn.com/docs/registry)
+- Check out the [shadcn CLI source](https://github.com/shadcn/ui) for advanced usage

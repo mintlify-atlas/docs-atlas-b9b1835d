@@ -1,0 +1,200 @@
+---
+title: Installation
+description: Install Anicon animated icons in your project using the shadcn CLI
+---
+
+## Prerequisites
+
+Before installing Anicon, make sure you have:
+
+<AccordionGroup>
+  <Accordion title="shadcn/ui initialized in your project">
+    Anicon uses the shadcn CLI for installation. You need a `components.json` file in your project root.
+    
+    If you haven't set up shadcn/ui yet, follow the [shadcn/ui installation guide](https://ui.shadcn.com/docs/installation) for your framework (Next.js, Vite, Remix, etc.).
+  </Accordion>
+
+  <Accordion title="React 18+">
+    Anicon requires React 18 or later for full compatibility with Motion.
+  </Accordion>
+
+  <Accordion title="A package manager">
+    You'll need npm, yarn, pnpm, or bun installed.
+  </Accordion>
+</AccordionGroup>
+
+## Installation Methods
+
+### Method 1: Install Individual Icons (Recommended)
+
+Install specific icons on-demand using the shadcn CLI. This is the recommended approach as it keeps your bundle size minimal.
+
+<CodeGroup>
+```bash npm
+npx shadcn@latest add https://anicon.dev/r/icon-heart.json
+```
+
+```bash yarn
+yarn dlx shadcn@latest add https://anicon.dev/r/icon-heart.json
+```
+
+```bash pnpm
+pnpm dlx shadcn@latest add https://anicon.dev/r/icon-heart.json
+```
+
+```bash bun
+bunx shadcn@latest add https://anicon.dev/r/icon-heart.json
+```
+</CodeGroup>
+
+<Note>
+  Replace `icon-heart` with any icon name from the [Anicon gallery](https://anicon.dev). The CLI will:
+  - Copy the icon component to `components/ui/`
+  - Install `motion` dependency if not already present
+  - Configure TypeScript types
+</Note>
+
+### Method 2: Install Multiple Icons
+
+You can install multiple icons in a single command:
+
+<CodeGroup>
+```bash npm
+npx shadcn@latest add https://anicon.dev/r/icon-heart.json https://anicon.dev/r/icon-star.json https://anicon.dev/r/icon-sparkle.json
+```
+
+```bash yarn
+yarn dlx shadcn@latest add https://anicon.dev/r/icon-heart.json https://anicon.dev/r/icon-star.json https://anicon.dev/r/icon-sparkle.json
+```
+
+```bash pnpm
+pnpm dlx shadcn@latest add https://anicon.dev/r/icon-heart.json https://anicon.dev/r/icon-star.json https://anicon.dev/r/icon-sparkle.json
+```
+
+```bash bun
+bunx shadcn@latest add https://anicon.dev/r/icon-heart.json https://anicon.dev/r/icon-star.json https://anicon.dev/r/icon-sparkle.json
+```
+</CodeGroup>
+
+## What Gets Installed
+
+When you install an icon, the shadcn CLI will:
+
+<Steps>
+  <Step title="Create the component file">
+    The icon component is copied to `components/ui/icon-[name].tsx` (or your configured components directory).
+  </Step>
+
+  <Step title="Install dependencies">
+    If `motion` isn't already in your `package.json`, it will be installed automatically:
+    
+    ```json package.json
+    {
+      "dependencies": {
+        "motion": "^11.18.2"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Configure TypeScript">
+    TypeScript definitions are included in the component file with proper prop types.
+  </Step>
+</Steps>
+
+## Verify Installation
+
+After installation, you should see the icon component in your project:
+
+```bash
+project/
+├── components/
+│   └── ui/
+│       └── icon-heart.tsx    ← Your new icon!
+├── components.json
+└── package.json
+```
+
+<Tip>
+  The icon component is now part of your codebase. You can modify it, customize the animations, or adjust styling to fit your needs.
+</Tip>
+
+## Manual Installation
+
+If you prefer not to use the CLI, you can manually copy icon components:
+
+<Steps>
+  <Step title="Install Motion">
+    <CodeGroup>
+    ```bash npm
+    npm install motion
+    ```
+    
+    ```bash yarn
+    yarn add motion
+    ```
+    
+    ```bash pnpm
+    pnpm add motion
+    ```
+    
+    ```bash bun
+    bun add motion
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Copy the icon component">
+    Browse the [Anicon gallery](https://anicon.dev), find your icon, and copy the component code to `components/ui/icon-[name].tsx`.
+  </Step>
+
+  <Step title="Import and use">
+    Import the icon in your components:
+    
+    ```tsx
+    import { IconHeart } from "@/components/ui/icon-heart";
+    ```
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Error: components.json not found">
+    Anicon requires a `components.json` file created by shadcn/ui. Initialize shadcn first:
+    
+    ```bash
+    npx shadcn@latest init
+    ```
+  </Accordion>
+
+  <Accordion title="Motion import errors">
+    Make sure `motion` is installed:
+    
+    ```bash
+    npm install motion
+    ```
+    
+    If you're using an older version of Framer Motion, Anicon requires the newer `motion` package (formerly `framer-motion`).
+  </Accordion>
+
+  <Accordion title="TypeScript errors">
+    Ensure your `tsconfig.json` includes the components directory:
+    
+    ```json
+    {
+      "compilerOptions": {
+        "paths": {
+          "@/*": ["./*"]
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+  Learn how to use your installed icons in your application
+</Card>

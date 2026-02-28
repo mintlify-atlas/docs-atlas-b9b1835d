@@ -1,0 +1,288 @@
+---
+title: Adding Icons to the Registry
+description: Learn how to add new animated icons to the Anicon registry
+---
+
+This guide walks you through the process of adding a new animated icon to the Anicon registry.
+
+## Prerequisites
+
+Before adding a new icon, ensure you have:
+
+- Cloned the Anicon repository
+- Installed dependencies with `npm install`
+- Familiarity with React and Motion (formerly Framer Motion)
+
+## Step-by-Step Process
+
+<Steps>
+
+### Create the icon folder
+
+Create a new folder for your icon under `registry/default/`. Follow the naming convention `icon-[name]`:
+
+```bash
+mkdir registry/default/icon-my-icon
+```
+
+### Create the icon component
+
+Inside your new folder, create a TypeScript React component file with the same name:
+
+```bash
+touch registry/default/icon-my-icon/icon-my-icon.tsx
+```
+
+Your icon component should follow this structure:
+
+```tsx
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
+export interface IconMyIconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  strokeWidth?: number;
+}
+
+const animationVariants = {
+  rest: { scale: 1 },
+  hover: {
+    scale: 1.1,
+    transition: {
+      duration: 0.5,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut"
+    }
+  }
+};
+
+export function IconMyIcon({ 
+  size = 24, 
+  strokeWidth = 2, 
+  className, 
+  ...props 
+}: IconMyIconProps) {
+  const { onAnimationStart, ...rest } = props;
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      initial={prefersReducedMotion ? false : "rest"}
+      animate={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      whileTap={prefersReducedMotion ? undefined : "tap"}
+      className={`outline-none focus:outline-none focus:ring-0 select-none ${className ?? ""}`.trim()}
+      variants={animationVariants}
+      {...rest}
+    >
+      {/* Your SVG paths here */}
+      <motion.path d="M..." />
+    </motion.svg>
+  );
+}
+```
+
+<Note>
+Always use `"use client"` directive at the top since Motion components require client-side rendering.
+</Note>
+
+### Add the registry entry
+
+Open `registry.json` in the root of the project and add a new entry to the `items` array:
+
+```json
+{
+  "name": "icon-my-icon",
+  "type": "registry:component",
+  "title": "Animated My Icon",
+  "description": "Short description of what the icon does.",
+  "dependencies": ["motion"],
+  "files": [
+    {
+      "path": "registry/default/icon-my-icon/icon-my-icon.tsx",
+      "type": "registry:component"
+    }
+  ]
+}
+```
+
+**Registry entry fields:**
+
+- `name`: The icon identifier (must match folder name)
+- `type`: Always `"registry:component"`
+- `title`: Display name (typically "Animated [Icon Name]")
+- `description`: Brief description of the animation behavior
+- `dependencies`: Always include `"motion"`
+- `files`: Array with path to your component file
+
+### Build the registry
+
+Generate the registry JSON files that users will install via the CLI:
+
+```bash
+npm run registry:build
+```
+
+This command runs `shadcn build` which creates JSON files in the `public/r/` directory.
+
+Expected output:
+
+```
+✓ Building registry...
+✓ Built icon-my-icon.json
+```
+
+### Test locally
+
+Start the development server to preview your icon:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your icon in the showcase.
+
+### Deploy
+
+Deploy your changes so the registry URLs become accessible:
+
+```bash
+npm run build
+npm start
+```
+
+Or deploy to your hosting provider (Vercel, Netlify, etc.).
+
+</Steps>
+
+## Best Practices
+
+### Accessibility
+
+- Always check for reduced motion preferences using `useReducedMotion()`
+- Disable animations when `prefersReducedMotion` is true
+- Use semantic props like `aria-label` when needed
+
+### Performance
+
+- Keep animations lightweight and performant
+- Use Motion's optimized properties (`x`, `y`, `scale`, `rotate`, `opacity`)
+- Avoid animating properties that trigger layout recalculation
+
+### Naming Conventions
+
+- Use kebab-case for folder and file names: `icon-my-icon`
+- Use PascalCase for component names: `IconMyIcon`
+- Keep names descriptive but concise
+
+### Animation Design
+
+- Make animations subtle and purposeful
+- Use the `animationConfig` helper from `lib/animation-config.ts` for consistency
+- Test animations at different sizes and stroke widths
+
+## Example: Adding a Pulse Icon
+
+Here's a complete example of adding a pulse icon:
+
+**1. Create folder and file:**
+
+```bash
+mkdir registry/default/icon-pulse
+touch registry/default/icon-pulse/icon-pulse.tsx
+```
+
+**2. Icon component (`icon-pulse.tsx`):**
+
+```tsx
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
+export interface IconPulseProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  strokeWidth?: number;
+}
+
+const pulseVariants = {
+  rest: { scale: 1, opacity: 1 },
+  hover: {
+    scale: [1, 1.2, 1],
+    opacity: [1, 0.8, 1],
+    transition: {
+      duration: 1,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
+
+export function IconPulse({ size = 24, strokeWidth = 2, className, ...props }: IconPulseProps) {
+  const { onAnimationStart, ...rest } = props;
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      initial={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      className={`outline-none focus:outline-none focus:ring-0 select-none ${className ?? ""}`.trim()}
+      variants={pulseVariants}
+      {...rest}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="3" />
+    </motion.svg>
+  );
+}
+```
+
+**3. Add to `registry.json`:**
+
+```json
+{
+  "name": "icon-pulse",
+  "type": "registry:component",
+  "title": "Animated Pulse",
+  "description": "Pulse icon with expanding rings.",
+  "dependencies": ["motion"],
+  "files": [
+    {
+      "path": "registry/default/icon-pulse/icon-pulse.tsx",
+      "type": "registry:component"
+    }
+  ]
+}
+```
+
+**4. Build and test:**
+
+```bash
+npm run registry:build
+npm run dev
+```
+
+## Next Steps
+
+- Learn about [creating custom animations](/guides/creating-custom-icons)
+- Understand the [registry build process](/guides/registry-setup)
+- Explore [Motion documentation](https://motion.dev/docs) for advanced animations

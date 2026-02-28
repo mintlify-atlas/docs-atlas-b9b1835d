@@ -1,80 +1,284 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start
+description: Get up and running with your first animated icon in under 5 minutes
 ---
 
-## Get started in three steps
-
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+Get your first animated icon working in under 5 minutes. This guide assumes you already have a React project set up with [shadcn/ui](https://ui.shadcn.com).
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Don't have shadcn/ui installed yet? Check out the [Installation](/installation) guide first.
 </Note>
+
+## Add Your First Icon
+
+<Steps>
+  <Step title="Install an icon component">
+    Use the shadcn CLI to install your first animated icon. Let's start with the Heart icon:
+
+    <CodeGroup>
+    ```bash npm
+    npx shadcn@latest add https://anicon.dev/r/icon-heart.json
+    ```
+
+    ```bash yarn
+    yarn dlx shadcn@latest add https://anicon.dev/r/icon-heart.json
+    ```
+
+    ```bash pnpm
+    pnpm dlx shadcn@latest add https://anicon.dev/r/icon-heart.json
+    ```
+
+    ```bash bun
+    bunx --bun shadcn@latest add https://anicon.dev/r/icon-heart.json
+    ```
+    </CodeGroup>
+
+    This installs the icon component and the `motion` dependency if needed.
+  </Step>
+
+  <Step title="Import the icon in your component">
+    Import the icon component in your React file:
+
+    ```tsx
+    import { IconHeart } from "@/components/ui/icon-heart"
+    ```
+  </Step>
+
+  <Step title="Use the icon">
+    Add the icon to your JSX. Try hovering over it to see the animation!
+
+    ```tsx
+    export default function MyComponent() {
+      return (
+        <div>
+          <h1>My Animated Icon</h1>
+          <IconHeart size={32} className="text-rose-500" />
+        </div>
+      )
+    }
+    ```
+  </Step>
+
+  <Step title="See it in action">
+    Run your development server and hover over the heart icon. You'll see it scale up smoothly!
+
+    The icon automatically respects the user's motion preferences and will disable animations if they have `prefers-reduced-motion` enabled.
+  </Step>
+</Steps>
+
+## Complete Example
+
+Here's a complete working example using multiple icons:
+
+```tsx
+import { IconHeart } from "@/components/ui/icon-heart"
+import { IconBell } from "@/components/ui/icon-bell"
+import { IconStar } from "@/components/ui/icon-star"
+
+export default function Dashboard() {
+  return (
+    <div className="flex gap-4 p-8">
+      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-500 text-white hover:bg-rose-600">
+        <IconHeart size={20} />
+        <span>Like</span>
+      </button>
+
+      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600">
+        <IconBell size={20} />
+        <span>Notifications</span>
+      </button>
+
+      <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600">
+        <IconStar size={20} />
+        <span>Favorite</span>
+      </button>
+    </div>
+  )
+}
+```
+
+## Icon Props
+
+All Anicon components accept these common props:
+
+<ParamField path="size" type="number" default={24}>
+  The width and height of the icon in pixels
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default={2}>
+  The stroke width of the icon paths
+</ParamField>
+
+<ParamField path="className" type="string">
+  CSS classes to apply to the icon (e.g., Tailwind classes)
+</ParamField>
+
+<ParamField path="...props" type="React.SVGProps<SVGSVGElement>">
+  All standard SVG attributes are supported (onClick, onMouseEnter, style, etc.)
+</ParamField>
+
+## Customization Examples
+
+### Custom Size
+
+```tsx
+<IconHeart size={48} />
+```
+
+### Custom Colors
+
+```tsx
+<IconHeart className="text-rose-500" />
+<IconBell className="text-blue-600" />
+<IconStar className="text-amber-400" />
+```
+
+### Custom Stroke Width
+
+```tsx
+<IconHeart strokeWidth={3} />
+```
+
+### Click Handlers
+
+```tsx
+<IconHeart 
+  onClick={() => console.log('Heart clicked!')}
+  className="cursor-pointer"
+/>
+```
+
+## Understanding the Icon Component
+
+Let's look at what makes these icons special. Here's a simplified version of the Heart icon:
+
+```tsx
+import { motion, useReducedMotion } from "framer-motion"
+
+export function IconHeart({ size = 24, strokeWidth = 2, className, ...props }) {
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <motion.svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      initial={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      variants={{
+        rest: { scale: 1 },
+        hover: { 
+          scale: 1.1,
+          transition: { duration: 0.5, repeat: Infinity, repeatType: "reverse" }
+        }
+      }}
+      className={className}
+      {...props}
+    >
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </motion.svg>
+  )
+}
+```
+
+<Accordion title="Key Features Explained">
+  **Motion Variants** - The icon uses Motion's variant system to define different animation states (rest and hover).
+
+  **Accessibility** - The `useReducedMotion()` hook detects user preferences and disables animations when needed.
+
+  **TypeScript** - Full type safety with proper prop types for size, strokeWidth, and all SVG attributes.
+
+  **Customization** - Accepts all standard React and SVG props, making it fully customizable.
+</Accordion>
+
+## Animation Customization
+
+Want to customize the animation behavior? You can override the default variants:
+
+```tsx
+<motion.div
+  whileHover={{ scale: 1.2 }}
+  whileTap={{ scale: 0.95 }}
+>
+  <IconHeart />
+</motion.div>
+```
+
+Or create your own animated wrapper:
+
+```tsx
+import { motion } from "framer-motion"
+
+<motion.button
+  whileHover={{ rotate: 15 }}
+  whileTap={{ rotate: -15 }}
+  className="p-2"
+>
+  <IconStar size={24} />
+</motion.button>
+```
+
+## Common Patterns
+
+### Icon Button
+
+```tsx
+function IconButton({ icon: Icon, label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+      aria-label={label}
+    >
+      <Icon size={20} />
+      <span>{label}</span>
+    </button>
+  )
+}
+
+// Usage
+<IconButton icon={IconHeart} label="Like" onClick={handleLike} />
+```
+
+### Icon with Label
+
+```tsx
+<div className="flex items-center gap-2">
+  <IconBell size={16} className="text-blue-500" />
+  <span className="text-sm">3 new notifications</span>
+</div>
+```
+
+### Icon Grid
+
+```tsx
+const icons = [IconHeart, IconBell, IconStar, IconHome, IconSettings]
+
+<div className="grid grid-cols-5 gap-4">
+  {icons.map((Icon, i) => (
+    <Icon key={i} size={32} className="text-gray-700" />
+  ))}
+</div>
+```
+
+## Next Steps
+
+Now that you have your first animated icon working, explore more:
+
+<CardGroup cols={2}>
+  <Card title="Browse All Icons" icon="grid" href="https://anicon.dev">
+    Explore all 572+ animated icons
+  </Card>
+  <Card title="Customization" icon="palette" href="/usage/customization">
+    Learn how to customize size, color, and stroke
+  </Card>
+  <Card title="Animation Config" icon="wand-sparkles" href="/usage/animation-config">
+    Dive into animation variants and transitions
+  </Card>
+  <Card title="Accessibility" icon="universal-access" href="/usage/accessibility">
+    Learn about reduced motion and ARIA support
+  </Card>
+</CardGroup>

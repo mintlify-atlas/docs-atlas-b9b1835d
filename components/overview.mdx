@@ -1,0 +1,215 @@
+---
+title: 'Components Overview'
+description: 'Explore 572+ beautifully animated React icon components built with Framer Motion'
+icon: 'sparkles'
+---
+
+## Welcome to Anicon
+
+Anicon provides 572+ animated icon components, each crafted with smooth, purposeful animations that bring your UI to life. Every icon is built as a React component with consistent props and animation behavior powered by Framer Motion.
+
+## What Makes Anicon Special
+
+<CardGroup cols={2}>
+  <Card title="Smooth Animations" icon="wand-magic-sparkles">
+    Every icon features thoughtfully designed animations that respond to user interactions with hover, tap, and focus states.
+  </Card>
+  <Card title="Fully Accessible" icon="universal-access">
+    Respects `prefers-reduced-motion` settings automatically, ensuring accessibility for all users.
+  </Card>
+  <Card title="Consistent API" icon="code">
+    All icons share the same props interface (`size`, `strokeWidth`, `className`) making them easy to use and customize.
+  </Card>
+  <Card title="Tree-Shakeable" icon="tree">
+    Import only the icons you need. Each component is independently importable for optimal bundle size.
+  </Card>
+</CardGroup>
+
+## Quick Start
+
+All Anicon components follow a simple, consistent pattern:
+
+```tsx
+import { IconHeart } from "@/components/icons/icon-heart";
+
+export default function Example() {
+  return (
+    <IconHeart 
+      size={32} 
+      strokeWidth={2}
+      className="text-rose-500"
+    />
+  );
+}
+```
+
+## Popular Icons
+
+Here are some of the most commonly used icons across different categories:
+
+### Actions & Navigation
+
+<CardGroup cols={3}>
+  <Card title="IconHome" icon="home">
+    Home icon with playful roof lift and door bounce
+  </Card>
+  <Card title="IconSearch" icon="magnifying-glass">
+    Magnifying glass with zoom pulse animation
+  </Card>
+  <Card title="IconSettings" icon="gear">
+    Gear rotating 45 degrees on hover
+  </Card>
+  <Card title="IconMenu" icon="bars">
+    Menu icon with staggered line slides
+  </Card>
+  <Card title="IconArrowRight" icon="arrow-right">
+    Arrow with hover slide and tap animation
+  </Card>
+  <Card title="IconChevronDown" icon="chevron-down">
+    Chevron with collapse/expand animation
+  </Card>
+</CardGroup>
+
+### Essential Actions
+
+<CardGroup cols={3}>
+  <Card title="IconCheck" icon="check">
+    Checkmark with stroke draw animation
+  </Card>
+  <Card title="IconX" icon="xmark">
+    X mark with 90-degree rotation
+  </Card>
+  <Card title="IconPlus" icon="plus">
+    Plus sign with scale and rotate
+  </Card>
+  <Card title="IconMinus" icon="minus">
+    Minus sign with contracting animation
+  </Card>
+  <Card title="IconEdit" icon="pen">
+    Edit pencil with writing tilt motion
+  </Card>
+  <Card title="IconTrash" icon="trash">
+    Trash can with lid lifting animation
+  </Card>
+</CardGroup>
+
+### Communication
+
+<CardGroup cols={3}>
+  <Card title="IconBell" icon="bell">
+    Bell with ringing shake animation
+  </Card>
+  <Card title="IconMail" icon="envelope">
+    Mail envelope with flap animation
+  </Card>
+  <Card title="IconSend" icon="paper-plane">
+    Send icon with flight motion
+  </Card>
+</CardGroup>
+
+### Files & Media
+
+<CardGroup cols={3}>
+  <Card title="IconDownload" icon="download">
+    Download arrow with downward motion
+  </Card>
+  <Card title="IconUpload" icon="upload">
+    Upload arrow with upward motion
+  </Card>
+  <Card title="IconFile" icon="file">
+    File icon with page flip animation
+  </Card>
+  <Card title="IconFolder" icon="folder">
+    Folder with opening animation
+  </Card>
+  <Card title="IconPlay" icon="play">
+    Play button with scale animation
+  </Card>
+  <Card title="IconPause" icon="pause">
+    Pause button with bar animation
+  </Card>
+</CardGroup>
+
+### UI Elements
+
+<CardGroup cols={3}>
+  <Card title="IconHeart" icon="heart">
+    Heart with hover and tap scale animation
+  </Card>
+  <Card title="IconStar" icon="star">
+    Star with sparkle and rotate animation
+  </Card>
+  <Card title="IconLoader" icon="spinner">
+    Loading spinner with continuous rotation
+  </Card>
+  <Card title="IconEye" icon="eye">
+    Eye icon with blink animation
+  </Card>
+  <Card title="IconLock" icon="lock">
+    Lock with secure locking animation
+  </Card>
+  <Card title="IconUnlock" icon="unlock">
+    Unlock with opening animation
+  </Card>
+</CardGroup>
+
+## Icon Categories
+
+Browse all 572+ icons organized by category:
+
+- **Actions** - Common user actions like edit, delete, copy, share
+- **Arrows & Directions** - Navigation arrows, chevrons, and directional indicators
+- **Communication** - Mail, messages, notifications, and social icons
+- **Files & Folders** - Document and file management icons
+- **Media** - Play, pause, video, music, and camera controls
+- **UI Elements** - Hearts, stars, badges, and interface components
+- **Charts & Analytics** - Data visualization and dashboard icons
+- **E-commerce** - Shopping, payments, and retail icons
+- **Tech & Development** - Code, terminal, git, and developer tools
+- **User & Profile** - User management and profile icons
+- **Alerts & Status** - Warnings, errors, success, and status indicators
+- **Time & Calendar** - Clocks, calendars, and scheduling icons
+- **Weather & Nature** - Weather conditions, plants, and animals
+- **Shapes & Geometry** - Geometric shapes and mathematical symbols
+- **Buildings & Places** - Architecture and location icons
+
+<Card title="View All Categories" icon="grid" href="/components/icon-categories">
+  Explore the complete icon library organized by category with search and filtering
+</Card>
+
+## Component Architecture
+
+Every Anicon component is built with:
+
+- **Framer Motion** - Smooth, physics-based animations
+- **TypeScript** - Full type safety and IntelliSense support
+- **React Server Components** - "use client" directive for Next.js 13+ compatibility
+- **Accessibility First** - Automatic `prefers-reduced-motion` support
+- **Customizable** - All standard SVG props supported
+
+## Performance
+
+Anicon icons are optimized for performance:
+
+- Individual imports prevent bundle bloat
+- Animations use GPU-accelerated transforms
+- Reduced motion respected by default
+- Minimal runtime overhead
+- Tree-shakeable exports
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Icon Categories" icon="grid" href="/components/icon-categories">
+    Browse all 572+ icons organized by category
+  </Card>
+  <Card title="Props Reference" icon="book" href="/components/props-reference">
+    Complete API documentation for icon component props
+  </Card>
+  <Card title="Animation Variants" icon="wand-sparkles" href="/components/animation-variants">
+    Learn about animation configuration and customization
+  </Card>
+  <Card title="Installation" icon="download" href="/installation">
+    Get started with Anicon in your project
+  </Card>
+</CardGroup>

@@ -1,0 +1,619 @@
+---
+title: 'Animation Variants'
+description: 'Understanding animation configuration, transitions, and customization in Anicon'
+icon: 'wand-sparkles'
+---
+
+## Animation System
+
+Anicon uses [Framer Motion](https://www.framer.com/motion/) to power all icon animations. Every icon features carefully crafted animations that respond to user interactions while respecting accessibility preferences.
+
+## Core Animation Principles
+
+<CardGroup cols={2}>
+  <Card title="Purposeful Motion" icon="bullseye">
+    Every animation has a purpose - to provide feedback, guide attention, or enhance the user experience.
+  </Card>
+  <Card title="Accessibility First" icon="universal-access">
+    All animations automatically respect `prefers-reduced-motion` settings.
+  </Card>
+  <Card title="Physics-Based" icon="atom">
+    Spring-based animations feel natural and responsive.
+  </Card>
+  <Card title="Performance Optimized" icon="gauge-high">
+    Animations use GPU-accelerated transforms for smooth 60fps performance.
+  </Card>
+</CardGroup>
+
+## Animation States
+
+Most Anicon components respond to three interaction states:
+
+### Rest State
+
+The default state when the icon is not being interacted with.
+
+```tsx
+const iconVariants = {
+  rest: { 
+    scale: 1,
+    rotate: 0 
+  }
+};
+```
+
+### Hover State
+
+Triggered when the user hovers over the icon (desktop/pointer devices).
+
+```tsx
+const iconVariants = {
+  rest: { scale: 1 },
+  hover: { 
+    scale: 1.1,
+    transition: { duration: 0.3 }
+  }
+};
+```
+
+### Tap State
+
+Triggered when the user clicks/taps the icon (all devices).
+
+```tsx
+const iconVariants = {
+  rest: { scale: 1 },
+  tap: { 
+    scale: 0.9,
+    transition: { duration: 0.2 }
+  }
+};
+```
+
+## Animation Configuration
+
+Anicon includes a centralized animation configuration file that ensures consistent behavior across all icons.
+
+### Transition Presets
+
+Pre-configured transition types for different animation needs.
+
+<ResponseField name="spring" type="object">
+  Standard spring for most interactions.
+  
+  ```tsx
+  transitions.spring = {
+    type: "spring",
+    stiffness: 400,
+    damping: 17,
+  }
+  ```
+  
+  **Use for:** General hover and tap interactions, smooth movements.
+</ResponseField>
+
+<ResponseField name="springBouncy" type="object">
+  Bouncier spring for playful effects.
+  
+  ```tsx
+  transitions.springBouncy = {
+    type: "spring",
+    stiffness: 300,
+    damping: 10,
+  }
+  ```
+  
+  **Use for:** Hearts, stars, celebratory icons.
+</ResponseField>
+
+<ResponseField name="springSnappy" type="object">
+  Quick spring for snappy feedback.
+  
+  ```tsx
+  transitions.springSnappy = {
+    type: "spring",
+    stiffness: 500,
+    damping: 20,
+  }
+  ```
+  
+  **Use for:** Quick tap responses, UI controls.
+</ResponseField>
+
+<ResponseField name="tween" type="object">
+  Tween for linear/predictable animations.
+  
+  ```tsx
+  transitions.tween = {
+    type: "tween",
+    duration: 0.3,
+    ease: "easeInOut",
+  }
+  ```
+  
+  **Use for:** Rotations, continuous animations, loaders.
+</ResponseField>
+
+<ResponseField name="tweenFast" type="object">
+  Fast tween for tap responses.
+  
+  ```tsx
+  transitions.tweenFast = {
+    type: "tween",
+    duration: 0.2,
+    ease: "easeOut",
+  }
+  ```
+  
+  **Use for:** Quick state changes, button presses.
+</ResponseField>
+
+### Movement Distances
+
+Standardized distances for icon movement animations.
+
+<ResponseField name="distances.small" type="number" default="3">
+  Small movement distance (3px) - subtle shifts.
+</ResponseField>
+
+<ResponseField name="distances.medium" type="number" default="5">
+  Medium movement distance (5px) - noticeable motion.
+</ResponseField>
+
+<ResponseField name="distances.large" type="number" default="8">
+  Large movement distance (8px) - prominent shifts.
+</ResponseField>
+
+```tsx Example Usage
+const arrowVariants = {
+  rest: { x: 0 },
+  hover: { 
+    x: animationConfig.distances.medium, // Moves 5px right
+    transition: animationConfig.transitions.spring
+  }
+};
+```
+
+### Rotation Amounts
+
+Standardized rotation angles for consistent spinning effects.
+
+<ResponseField name="rotations.small" type="number" default="15">
+  Small rotation (15°) - subtle tilt.
+</ResponseField>
+
+<ResponseField name="rotations.medium" type="number" default="45">
+  Medium rotation (45°) - noticeable turn.
+</ResponseField>
+
+<ResponseField name="rotations.large" type="number" default="90">
+  Large rotation (90°) - quarter turn.
+</ResponseField>
+
+<ResponseField name="rotations.full" type="number" default="360">
+  Full rotation (360°) - complete spin.
+</ResponseField>
+
+```tsx Example Usage
+const gearVariants = {
+  rest: { rotate: 0 },
+  hover: { 
+    rotate: animationConfig.rotations.medium, // 45° rotation
+  }
+};
+```
+
+### Scale Factors
+
+Standardized scale values for grow and shrink effects.
+
+<ResponseField name="scales.shrink" type="number" default="0.9">
+  Standard shrink scale - noticeable reduction.
+</ResponseField>
+
+<ResponseField name="scales.shrinkSmall" type="number" default="0.95">
+  Small shrink scale - subtle reduction.
+</ResponseField>
+
+<ResponseField name="scales.grow" type="number" default="1.1">
+  Standard grow scale - noticeable enlargement.
+</ResponseField>
+
+<ResponseField name="scales.growSmall" type="number" default="1.05">
+  Small grow scale - subtle enlargement.
+</ResponseField>
+
+<ResponseField name="scales.growLarge" type="number" default="1.2">
+  Large grow scale - prominent enlargement.
+</ResponseField>
+
+```tsx Example Usage
+const heartVariants = {
+  rest: { scale: 1 },
+  hover: { 
+    scale: animationConfig.scales.grow, // Grows to 110%
+  },
+  tap: {
+    scale: animationConfig.scales.shrinkSmall, // Shrinks to 95%
+  }
+};
+```
+
+### Shake & Ring Sequences
+
+Pre-defined animation sequences for shake and ring effects.
+
+<ResponseField name="sequences.ring" type="number[]">
+  Ring animation sequence for bells and alerts.
+  
+  ```tsx
+  sequences.ring = [0, -20, 20, -15, 15, -10, 10, 0]
+  ```
+  
+  Creates a back-and-forth ringing motion that gradually settles.
+</ResponseField>
+
+<ResponseField name="sequences.shake" type="number[]">
+  Shake animation sequence for errors or alerts.
+  
+  ```tsx
+  sequences.shake = [0, -5, 5, -5, 5, 0]
+  ```
+  
+  Creates a rapid horizontal shake.
+</ResponseField>
+
+<ResponseField name="sequences.wiggle" type="number[]">
+  Subtle wiggle animation.
+  
+  ```tsx
+  sequences.wiggle = [0, -3, 3, -3, 3, 0]
+  ```
+  
+  Creates a gentle side-to-side motion.
+</ResponseField>
+
+```tsx Bell Icon Example
+const bellVariants = {
+  rest: { rotate: 0 },
+  hover: {
+    rotate: animationConfig.sequences.ring,
+    transition: { 
+      duration: animationConfig.durations.ring 
+    },
+  },
+};
+```
+
+### Animation Durations
+
+Standardized timing values for consistent pacing.
+
+<ResponseField name="durations.fast" type="number" default="0.2">
+  Fast duration (200ms) - quick responses.
+</ResponseField>
+
+<ResponseField name="durations.normal" type="number" default="0.3">
+  Normal duration (300ms) - standard animations.
+</ResponseField>
+
+<ResponseField name="durations.slow" type="number" default="0.5">
+  Slow duration (500ms) - deliberate movements.
+</ResponseField>
+
+<ResponseField name="durations.ring" type="number" default="0.6">
+  Ring duration (600ms) - bell and shake animations.
+</ResponseField>
+
+## Real-World Examples
+
+Let's examine how actual Anicon components implement animations.
+
+### Example 1: IconHeart
+
+A simple scale animation with hover and tap states.
+
+```tsx icon-heart.tsx
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
+export interface IconHeartProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  strokeWidth?: number;
+}
+
+const beatVariants = {
+  rest: { scale: 1 },
+  hover: {
+    scale: 1.1,
+    transition: {
+      duration: 0.5,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut"
+    }
+  }
+};
+
+export function IconHeart({ 
+  size = 24, 
+  strokeWidth = 2, 
+  className, 
+  ...props 
+}: IconHeartProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      initial={prefersReducedMotion ? false : "rest"}
+      animate={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      whileTap={prefersReducedMotion ? undefined : "tap"}
+      className={`outline-none focus:outline-none focus:ring-0 select-none ${className ?? ""}`.trim()}
+      variants={beatVariants}
+      {...props}
+    >
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </motion.svg>
+  );
+}
+```
+
+**Key Features:**
+- Infinite beating animation on hover
+- Respects `prefers-reduced-motion`
+- Simple, effective motion
+
+### Example 2: IconBell
+
+A ringing animation using sequence values.
+
+```tsx icon-bell.tsx
+"use client";
+
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+
+export interface IconBellProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  strokeWidth?: number;
+}
+
+const bellVariants: Variants = {
+  rest: { rotate: 0 },
+  hover: {
+    rotate: [0, -20, 20, -15, 15, -10, 10, -5, 5, 0],
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
+  tap: {
+    rotate: [0, -25, 25, -20, 20, -15, 15, 0],
+    transition: { duration: 0.5, ease: "easeInOut" },
+  },
+};
+
+export function IconBell({
+  size = 24,
+  strokeWidth = 2,
+  className,
+  ...props
+}: IconBellProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      variants={bellVariants}
+      initial={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      whileTap={prefersReducedMotion ? undefined : "tap"}
+      style={{ originX: "50%", originY: "0%" }}
+      className={`outline-none focus:outline-none focus:ring-0 select-none ${className ?? ""}`.trim()}
+      {...props}
+    >
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </motion.svg>
+  );
+}
+```
+
+**Key Features:**
+- Ringing animation sequence
+- Custom transform origin (top center)
+- Different sequences for hover vs tap
+
+### Example 3: IconLoader
+
+A continuous rotation animation.
+
+```tsx icon-loader.tsx
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
+export interface IconLoaderProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+  strokeWidth?: number;
+}
+
+export function IconLoader({
+  size = 24,
+  strokeWidth = 2,
+  className,
+  ...props
+}: IconLoaderProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      animate={prefersReducedMotion ? {} : { rotate: 360 }}
+      transition={
+        prefersReducedMotion
+          ? {}
+          : {
+              repeat: Infinity,
+              duration: 1,
+              ease: "linear",
+            }
+      }
+      className={`outline-none focus:outline-none focus:ring-0 select-none ${className ?? ""}`.trim()}
+      {...props}
+    >
+      <path d="M12 2v4" />
+      <path d="m16.2 7.8 2.9-2.9" />
+      <path d="M18 12h4" />
+      <path d="m16.2 16.2 2.9 2.9" />
+      <path d="M12 18v4" />
+      <path d="m4.9 19.1 2.9-2.9" />
+      <path d="M2 12h4" />
+      <path d="m4.9 4.9 2.9 2.9" />
+    </motion.svg>
+  );
+}
+```
+
+**Key Features:**
+- Continuous infinite rotation
+- Linear easing for smooth spinning
+- Always animating (not interaction-based)
+
+## Accessibility: Reduced Motion
+
+All Anicon components automatically respect the user's motion preferences using Framer Motion's `useReducedMotion()` hook.
+
+```tsx
+const prefersReducedMotion = useReducedMotion();
+
+return (
+  <motion.svg
+    initial={prefersReducedMotion ? false : "rest"}
+    whileHover={prefersReducedMotion ? undefined : "hover"}
+    whileTap={prefersReducedMotion ? undefined : "tap"}
+    // ...
+  />
+);
+```
+
+### How It Works
+
+1. **User Preference Detection**: The hook checks the system-level `prefers-reduced-motion` media query
+2. **Conditional Animation**: If reduced motion is preferred, animations are disabled
+3. **Fallback States**: Icons render in their static "rest" state when animations are disabled
+
+<Note>
+You don't need to do anything special - this behavior is built into every Anicon component automatically.
+</Note>
+
+## Animation Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use Appropriate Transition Types" icon="chart-line">
+    - **Springs** for natural, physics-based interactions (hover, tap)
+    - **Tweens** for predictable, linear motions (rotations, progress)
+    - **Linear easing** for continuous animations (loaders, spinners)
+  </Accordion>
+
+  <Accordion title="Keep Animations Short" icon="clock">
+    Most animations should be under 500ms:
+    
+    - 200ms for quick feedback (taps)
+    - 300ms for standard transitions (hovers)
+    - 500-600ms for playful effects (rings, bounces)
+  </Accordion>
+
+  <Accordion title="Set Appropriate Transform Origins" icon="crosshairs">
+    Use `originX` and `originY` to control where animations pivot:
+    
+    ```tsx
+    // Bell rings from top
+    style={{ originX: "50%", originY: "0%" }}
+    
+    // Door opens from side
+    style={{ originX: "0%", originY: "50%" }}
+    ```
+  </Accordion>
+
+  <Accordion title="Animate Transform Properties" icon="wand-sparkles">
+    For best performance, animate transform properties:
+    
+    - `scale` - for grow/shrink effects
+    - `rotate` - for spinning/tilting
+    - `x`, `y` - for sliding/shifting
+    - `opacity` - for fading
+    
+    Avoid animating layout properties like `width`, `height`, `top`, `left`.
+  </Accordion>
+
+  <Accordion title="Test with Reduced Motion" icon="universal-access">
+    Always test your implementation with reduced motion enabled:
+    
+    **macOS**: System Preferences → Accessibility → Display → Reduce motion
+    **Windows**: Settings → Ease of Access → Display → Show animations
+    **Browser DevTools**: Chrome/Edge have emulation options
+  </Accordion>
+</AccordionGroup>
+
+## Customization
+
+While Anicon components come with pre-built animations, you can wrap them in your own motion components for custom behavior:
+
+```tsx
+import { motion } from "framer-motion";
+import { IconHeart } from "@/components/icons/icon-heart";
+
+function CustomAnimatedHeart() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <IconHeart />
+    </motion.div>
+  );
+}
+```
+
+<Warning>
+When wrapping icons in motion components, the inner icon animation and outer wrapper animation will both run. Test carefully to ensure they work well together.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Props Reference" icon="book" href="/components/props-reference">
+    Learn about all available component props
+  </Card>
+  <Card title="Icon Categories" icon="grid" href="/components/icon-categories">
+    Browse all 572+ animated icons
+  </Card>
+  <Card title="Framer Motion Docs" icon="arrow-up-right-from-square" href="https://www.framer.com/motion/">
+    Explore Framer Motion documentation for advanced animations
+  </Card>
+</CardGroup>

@@ -1,0 +1,557 @@
+---
+title: "Animation Configuration"
+description: "Understand and customize animation configurations for Anicon icons"
+---
+
+## Overview
+
+Anicon uses a centralized animation configuration system to ensure consistent behavior across all icons. The configuration is defined in `lib/animation-config.ts` and provides presets for transitions, movements, rotations, scales, and sequences.
+
+## Animation Config Structure
+
+The animation configuration exports several preset categories:
+
+```typescript
+export const animationConfig = {
+  transitions: { /* Spring and tween presets */ },
+  distances: { /* Movement distances in pixels */ },
+  rotations: { /* Rotation amounts in degrees */ },
+  scales: { /* Scale factors */ },
+  sequences: { /* Shake/ring sequences */ },
+  durations: { /* Duration presets */ },
+} as const;
+```
+
+## Transition Presets
+
+Transitions define the timing and easing of animations:
+
+<ParamField path="transitions.spring" type="object">
+  Standard spring for most interactions
+  
+  ```typescript
+  {
+    type: "spring",
+    stiffness: 400,
+    damping: 17,
+  }
+  ```
+</ParamField>
+
+<ParamField path="transitions.springBouncy" type="object">
+  Bouncier spring for playful effects (hearts, stars)
+  
+  ```typescript
+  {
+    type: "spring",
+    stiffness: 300,
+    damping: 10,
+  }
+  ```
+</ParamField>
+
+<ParamField path="transitions.springSnappy" type="object">
+  Quick spring for snappy feedback
+  
+  ```typescript
+  {
+    type: "spring",
+    stiffness: 500,
+    damping: 20,
+  }
+  ```
+</ParamField>
+
+<ParamField path="transitions.tween" type="object">
+  Tween for linear/predictable animations
+  
+  ```typescript
+  {
+    type: "tween",
+    duration: 0.3,
+    ease: "easeInOut",
+  }
+  ```
+</ParamField>
+
+<ParamField path="transitions.tweenFast" type="object">
+  Fast tween for tap responses
+  
+  ```typescript
+  {
+    type: "tween",
+    duration: 0.2,
+    ease: "easeOut",
+  }
+  ```
+</ParamField>
+
+## Distance Presets
+
+Movement distances in pixels for directional animations:
+
+```typescript
+distances: {
+  small: 3,    // Subtle movement
+  medium: 5,   // Standard movement
+  large: 8,    // Prominent movement
+}
+```
+
+### Example Usage
+
+```tsx
+import { animationConfig } from "@/lib/animation-config";
+
+const arrowVariants = {
+  rest: { y: 0 },
+  hover: { 
+    y: -animationConfig.distances.small,
+    transition: animationConfig.transitions.spring
+  },
+};
+```
+
+## Rotation Presets
+
+Rotation amounts in degrees:
+
+```typescript
+rotations: {
+  small: 15,     // Subtle tilt
+  medium: 45,    // Quarter rotation
+  large: 90,     // Right angle
+  full: 360,     // Complete rotation
+}
+```
+
+### Example Usage
+
+```tsx
+import { animationConfig } from "@/lib/animation-config";
+
+const rotateVariants = {
+  rest: { rotate: 0 },
+  hover: { 
+    rotate: animationConfig.rotations.small,
+    transition: animationConfig.transitions.spring
+  },
+};
+```
+
+## Scale Presets
+
+Scale factors for growing and shrinking:
+
+```typescript
+scales: {
+  shrink: 0.9,        // Standard shrink
+  shrinkSmall: 0.95,  // Subtle shrink
+  grow: 1.1,          // Standard grow
+  growSmall: 1.05,    // Subtle grow
+  growLarge: 1.2,     // Prominent grow
+}
+```
+
+### Example Usage
+
+```tsx
+import { animationConfig } from "@/lib/animation-config";
+
+const scaleVariants = {
+  rest: { scale: 1 },
+  hover: { 
+    scale: animationConfig.scales.grow,
+    transition: animationConfig.transitions.springBouncy
+  },
+  tap: { 
+    scale: animationConfig.scales.shrink,
+    transition: animationConfig.transitions.tweenFast
+  },
+};
+```
+
+## Sequence Presets
+
+Predefined animation sequences for shake, ring, and wiggle effects:
+
+```typescript
+sequences: {
+  ring: [0, -20, 20, -15, 15, -10, 10, 0],  // Bell ringing
+  shake: [0, -5, 5, -5, 5, 0],              // Horizontal shake
+  wiggle: [0, -3, 3, -3, 3, 0],             // Subtle wiggle
+}
+```
+
+### Example: Bell Icon
+
+The bell icon uses the ring sequence for realistic ringing motion:
+
+```tsx
+import { animationConfig } from "@/lib/animation-config";
+
+const bellVariants = {
+  rest: { rotate: 0 },
+  hover: {
+    rotate: [0, -20, 20, -15, 15, -10, 10, -5, 5, 0],
+    transition: { 
+      duration: animationConfig.durations.ring, 
+      ease: "easeInOut" 
+    },
+  },
+};
+```
+
+<Tabs>
+  <Tab title="Bell Icon">
+    ```tsx
+    "use client";
+
+    import { motion, useReducedMotion, type Variants } from "framer-motion";
+
+    export interface IconBellProps extends React.SVGProps<SVGSVGElement> {
+      size?: number;
+      strokeWidth?: number;
+    }
+
+    const bellVariants: Variants = {
+      rest: { rotate: 0 },
+      hover: {
+        rotate: [0, -20, 20, -15, 15, -10, 10, -5, 5, 0],
+        transition: { duration: 0.6, ease: "easeInOut" },
+      },
+      tap: {
+        rotate: [0, -25, 25, -20, 20, -15, 15, 0],
+        transition: { duration: 0.5, ease: "easeInOut" },
+      },
+    };
+
+    export function IconBell({
+      size = 24,
+      strokeWidth = 2,
+      className,
+      ...props
+    }: IconBellProps) {
+      const prefersReducedMotion = useReducedMotion();
+
+      return (
+        <motion.svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          variants={bellVariants}
+          initial={prefersReducedMotion ? false : "rest"}
+          whileHover={prefersReducedMotion ? undefined : "hover"}
+          whileTap={prefersReducedMotion ? undefined : "tap"}
+          style={{ originX: "50%", originY: "0%" }}
+          className={`outline-none select-none ${className ?? ""}`.trim()}
+          {...props}
+        >
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </motion.svg>
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Arrow Icon">
+    ```tsx
+    "use client";
+
+    import { motion, useReducedMotion, type Variants } from "framer-motion";
+
+    export interface IconArrowUpProps extends React.SVGProps<SVGSVGElement> {
+      size?: number;
+      strokeWidth?: number;
+    }
+
+    const arrowVariants: Variants = {
+      rest: { y: 0 },
+      hover: { 
+        y: [0, -2, 0],
+        transition: { 
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }
+      },
+    };
+
+    export function IconArrowUp({
+      size = 24,
+      strokeWidth = 2,
+      className,
+      ...props
+    }: IconArrowUpProps) {
+      const prefersReducedMotion = useReducedMotion();
+
+      return (
+        <motion.svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial="rest"
+          whileHover="hover"
+          className={`select-none ${className ?? ""}`.trim()}
+          {...props}
+        >
+          <motion.g variants={prefersReducedMotion ? {} : arrowVariants}>
+            <path d="m18 12-6-6-6 6" />
+            <path d="M12 18V6" />
+          </motion.g>
+        </motion.svg>
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Loader Icon">
+    ```tsx
+    "use client";
+
+    import { motion, useReducedMotion } from "framer-motion";
+
+    export interface IconLoaderProps extends React.SVGProps<SVGSVGElement> {
+      size?: number;
+      strokeWidth?: number;
+    }
+
+    export function IconLoader({
+      size = 24,
+      strokeWidth = 2,
+      className,
+      ...props
+    }: IconLoaderProps) {
+      const prefersReducedMotion = useReducedMotion();
+
+      return (
+        <motion.svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          animate={prefersReducedMotion ? {} : { rotate: 360 }}
+          transition={
+            prefersReducedMotion
+              ? {}
+              : {
+                  repeat: Infinity,
+                  duration: 1,
+                  ease: "linear",
+                }
+          }
+          className={`select-none ${className ?? ""}`.trim()}
+          {...props}
+        >
+          <path d="M12 2v4" />
+          <path d="m16.2 7.8 2.9-2.9" />
+          <path d="M18 12h4" />
+          <path d="m16.2 16.2 2.9 2.9" />
+          <path d="M12 18v4" />
+          <path d="m4.9 19.1 2.9-2.9" />
+          <path d="M2 12h4" />
+          <path d="m4.9 4.9 2.9 2.9" />
+        </motion.svg>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Duration Presets
+
+Standardized durations in seconds:
+
+```typescript
+durations: {
+  fast: 0.2,    // Quick transitions
+  normal: 0.3,  // Standard duration
+  slow: 0.5,    // Slower, deliberate
+  ring: 0.6,    // Bell ringing duration
+}
+```
+
+## Creating Custom Animations
+
+You can import the animation config to create your own custom animations:
+
+```tsx
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { animationConfig } from "@/lib/animation-config";
+
+const customVariants: Variants = {
+  rest: { 
+    scale: 1, 
+    rotate: 0 
+  },
+  hover: {
+    scale: animationConfig.scales.grow,
+    rotate: animationConfig.rotations.small,
+    transition: animationConfig.transitions.springBouncy,
+  },
+  tap: {
+    scale: animationConfig.scales.shrink,
+    transition: animationConfig.transitions.tweenFast,
+  },
+};
+
+export function CustomIcon({ size = 24, strokeWidth = 2, ...props }) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      width={size}
+      height={size}
+      variants={customVariants}
+      initial={prefersReducedMotion ? false : "rest"}
+      whileHover={prefersReducedMotion ? undefined : "hover"}
+      whileTap={prefersReducedMotion ? undefined : "tap"}
+      {...props}
+    >
+      {/* Your SVG paths */}
+    </motion.svg>
+  );
+}
+```
+
+## Animation Patterns
+
+### Beat/Pulse Animation
+
+Used in the Heart icon for a beating effect:
+
+```tsx
+const beatVariants = {
+  rest: { scale: 1 },
+  hover: {
+    scale: 1.1,
+    transition: {
+      duration: 0.5,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut"
+    }
+  }
+};
+```
+
+### Twinkle Animation
+
+Used in the Star icon for a twinkling effect:
+
+```tsx
+const twinkleVariants = {
+  rest: { opacity: 1, scale: 1 },
+  hover: {
+    opacity: 0.7,
+    scale: 1.1,
+    transition: {
+      duration: 0.5,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut"
+    }
+  }
+};
+```
+
+### Continuous Rotation
+
+Used in the Loader icon:
+
+```tsx
+<motion.svg
+  animate={{ rotate: 360 }}
+  transition={{
+    repeat: Infinity,
+    duration: 1,
+    ease: "linear",
+  }}
+>
+  {/* Icon paths */}
+</motion.svg>
+```
+
+### Directional Movement
+
+Used in arrow icons:
+
+```tsx
+const arrowVariants = {
+  rest: { y: 0 },
+  hover: { 
+    y: [0, -2, 0],
+    transition: { 
+      duration: 1.5,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  },
+};
+```
+
+## TypeScript Types
+
+The animation config exports TypeScript types for type-safe usage:
+
+```typescript
+export type TransitionType = keyof typeof animationConfig.transitions;
+export type DistanceType = keyof typeof animationConfig.distances;
+export type RotationType = keyof typeof animationConfig.rotations;
+export type ScaleType = keyof typeof animationConfig.scales;
+
+// Usage
+import type { TransitionType, ScaleType } from "@/lib/animation-config";
+
+function useCustomAnimation(transition: TransitionType, scale: ScaleType) {
+  return {
+    scale: animationConfig.scales[scale],
+    transition: animationConfig.transitions[transition],
+  };
+}
+```
+
+## Best Practices
+
+<Tip>
+  **Use the presets** - The animation config provides consistent, tested values that work well across different icons.
+</Tip>
+
+<Tip>
+  **Consider performance** - Avoid animating too many properties at once. Stick to transforms (scale, rotate, translate) and opacity for best performance.
+</Tip>
+
+<Warning>
+  **Respect reduced motion** - Always check `useReducedMotion()` and disable animations when users prefer reduced motion. See the [Accessibility](/usage/accessibility) page for details.
+</Warning>
+
+<Tip>
+  **Test on different devices** - Animation feels different on mobile vs desktop. Test your animations on various devices.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Accessibility" icon="universal-access" href="/usage/accessibility">
+    Learn how to make animations accessible
+  </Card>
+  <Card title="Basic Usage" icon="rocket" href="/usage/basic-usage">
+    Back to basic usage guide
+  </Card>
+</CardGroup>
