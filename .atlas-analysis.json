@@ -1,0 +1,93 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Anicon",
+  "projectDescription": "Animated icon component library installable like shadcn components, built with Motion.",
+  "theme": "palm",
+  "primaryColor": "#8b5cf6",
+  "lightColor": "#a78bfa",
+  "darkColor": "#6d28d9",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Usage",
+            "pages": [
+              "usage/basic-usage",
+              "usage/customization",
+              "usage/animation-config",
+              "usage/accessibility"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/adding-icons",
+              "guides/creating-custom-icons",
+              "guides/registry-setup"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "Icon Library",
+            "pages": [
+              "components/overview",
+              "components/icon-categories"
+            ]
+          },
+          {
+            "group": "Component API",
+            "pages": [
+              "components/props-reference",
+              "components/animation-variants"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "572+ animated icon components",
+    "Built with Motion (Framer Motion)",
+    "shadcn CLI installation",
+    "Customizable animations",
+    "TypeScript support",
+    "Accessibility-friendly with reduced motion support"
+  ],
+  "publicApiSurface": [
+    "IconHeart",
+    "IconSparkle",
+    "IconActivity",
+    "IconAlarmClock",
+    "IconBell",
+    "IconCalendar",
+    "IconCheck",
+    "IconClock",
+    "IconDownload",
+    "IconEdit",
+    "IconHome",
+    "IconLoader",
+    "IconMail",
+    "IconMenu",
+    "IconPlus",
+    "IconSearch",
+    "IconSettings",
+    "IconStar",
+    "IconTrash",
+    "IconUser",
+    "animationConfig"
+  ]
+}
